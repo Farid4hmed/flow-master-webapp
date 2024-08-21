@@ -1,10 +1,10 @@
 import ExcalidrawWrapper from "./excalidraw";
 
-export default function Home() {
+export default async function Home() {
     return (
-      <main className="w-full h-full">
-        <ExcalidrawWrapper />
-      </main>
+        <main className="w-full h-full">
+            <ExcalidrawWrapper  />
+        </main>
     );
-  }
-  
+
+}
