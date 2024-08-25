@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <main className="">
+    <main className="w-screen">
      
     </main>
   );

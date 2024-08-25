@@ -29,8 +29,8 @@ export default function ExcalidrawWrapper() {
     }
 
     return (
-        <section className="h-full w-full">
-            <div className="w-screen h-screen">
+        <section className="h-screen w-screen">
+            <div className="w-3/4 h-screen">
                 <Excalidraw
                     initialData={{
                         elements,
