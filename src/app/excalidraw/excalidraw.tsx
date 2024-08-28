@@ -1,45 +1,61 @@
-'use client'
-import React, { useState, useEffect } from "react";
-import { Excalidraw } from "@excalidraw/excalidraw";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { Excalidraw } from '@excalidraw/excalidraw';
 import mermaidToExcalidrawElements from './mermaidToExcali';
 
-const mermaidSyntax = `flowchart TD
-  A[Christmas] -->|Get money| B(Go shopping)
-  B --> C{Let me think}
-  C -->|One| D[Laptop]
-  C -->|Two| E[iPhone]
-  C -->|Three| F[Car]`;
+export default function ExcalidrawWrapper(props: any) {
+  const [elements, setElements] = useState([]); // State to store Excalidraw elements
+  console.log("chart\n", props.chart)
+  useEffect(() => {
+    const convertMermaidToElements = async () => {
+      const result: any = await mermaidToExcalidrawElements(props.chart); // Convert the mermaid chart to Excalidraw elements
+      setElements(result); // Set the resulting elements
+    };
 
-export default function ExcalidrawWrapper() {
-    const [elements, setElements] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    convertMermaidToElements(); // Call the function whenever props.chart changes
+  }, [props.chart]); // Dependency array ensures this effect runs whenever props.chart changes
 
-    useEffect(() => {
-        const convertMermaidToElements = async () => {
-            const result: any = await mermaidToExcalidrawElements(mermaidSyntax);
-            setElements(result);
-            setIsLoading(false);  // Set loading to false once elements are available
-        };
+  // Show a loading indicator while loading
+  if (props.isLoading) {
+    return <div className="w-full h-full bg-gray-100 flex justify-center items-center">
+      <div
+        className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-success motion-reduce:animate-[spin_1.5s_linear_infinite]"
+        role="status">
+        <span
+          className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+        >Loading...</span>
+      </div>
+    </div>;
+  }
 
-        convertMermaidToElements();
-    }, []);
-
-    if (isLoading) {
-        return <div>Loading...</div>; // Display a loading indicator or placeholder
-    }
-
-    return (
-        <section className="h-screen w-screen">
-            <div className="w-3/4 h-screen">
-                <Excalidraw
-                    initialData={{
-                        elements,
-                        appState: { zenModeEnabled: true },
-                        scrollToContent: true
-
-                    }}
-                />
+  return (
+    <>
+      {props.isLoading ? (
+        <div className="w-full h-full bg-gray-100 flex justify-center items-center">
+          <div
+            className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-success motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status">
+            <span
+              className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+            >Loading...</span>
+          </div>
+        </div>
+      ) :
+        (
+          <div className="h-screen w-screen">
+            <div className="w-3/5 h-screen">
+              <Excalidraw
+                initialData={{
+                  elements, // Dynamically set elements
+                  appState: { zenModeEnabled: true }, // Application state for Excalidraw
+                  scrollToContent: true, // Auto-scroll to content
+                }}
+                key={props.chart} // Use a key to force re-render Excalidraw component on data change
+              />
             </div>
-        </section>
-    );
+          </div>
+        )}
+
+    </>
+  );
 }

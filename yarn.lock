@@ -31,6 +31,11 @@
     mermaid "10.9.0"
     nanoid "4.0.2"
 
+"@google/generative-ai@^0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@google/generative-ai/-/generative-ai-0.17.1.tgz#6cd40d7489abf4d22e3bbb06e686bd03610deedc"
+  integrity sha512-TgWz02c5l2XJlEDys81UVat5+Qg9xqmYah7tQt6xlsBwFvzIFPz64aZFGd1av2sxT22NsssqLATjNsusAIJICA==
+
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@isaacs/cliui/-/cliui-8.0.2.tgz#b37667b7bc181c168782259bab42474fbf52b550"

@@ -105,11 +105,12 @@ graph TD
 `
 }
 
-const Chatbox: React.FC = () => {
+const Chatbox: any = (props: any) => {
+  // let setChart = props.setChart;
   let newId = generateUUID();
   let newReqId = generateUUID();
   const [count, setCount] = useState(0);
-  const [chart, setChart] = useState('');
+  // const [chart, setChart] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [userId, setUserId] = useState(newId);
   const [reqId, setReqId] = useState(newReqId);
@@ -121,48 +122,64 @@ const Chatbox: React.FC = () => {
 
   const handleSubmit = async (query: string) => {
     console.log("Submitted query:", query);
-    // const reqId = uuidv4();
     const textId = uuidv4();
     console.log('userId: ', userId, ", requestId: ", reqId);
+  
+    // Set initial response to "Bot is typing..."
     const newPrompt = {
       id: textId,
       text: query,
-      response: ""
+      response: "<em>Bot is typing...</em>"
     };
-    setPrompts([...prompts, newPrompt]);
+  
+    // Add the user prompt with "Bot is typing..." response
+    setPrompts((prevPrompts) => [...prevPrompts, newPrompt]);
     setSubmitted(true);
     setIsFetchingResponse(true);
-
+  
     // Fetch the chatbot response
     const chatBotResp = await getChatBotResponse(userId, reqId, query);
-    const wantsToDraw = chatBotResp?.wantsToDraw
-
+    const wantsToDraw = false;
+  
     if (wantsToDraw) {
-      console.log("WantsToDraw", reqId, userId)
+      console.log("WantsToDraw", reqId, userId);
       getMermaidCodeResponse();
+    } else {
+      console.log("doesn't want to draw", reqId, userId);
     }
-    else {
-      console.log("doesn't want to draw", reqId, userId)
-    }
-
-    setPrompts(prevPrompts =>
-      prevPrompts.map(prompt =>
-        prompt.id === textId ? { ...prompt, response: chatBotResp.model_output } : prompt
+  
+    // Update the response with the actual API response
+    setPrompts((prevPrompts) =>
+      prevPrompts.map((prompt) =>
+        prompt.id === textId ? { ...prompt, response: chatBotResp } : prompt
       )
     );
+  
     setIsFetchingResponse(false);
   };
-  console.log('currChart', chart);
+  // console.log('currChart', chart);
 
   const getMermaidCodeResponse = async () => {
-    setIsFetchingMermaidCode(true)
+    props.setIsLoading(true);
+    console.log("here")
+    // setIsFetchingMermaidCode(true)
+    
     let response = await getMermaidCode(userId, reqId);
-    let mermaidCode = response.mermaid_code;
-    mermaidCode = mermaidCode.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\'/g, "'");
-    setChart(mermaidCode);
-    setIsFetchingMermaidCode(false);
+    
+    let mermaidCode = response;
+    mermaidCode = cleanMermaidInput(mermaidCode);
+  
+    console.log("THE MERMAID CODE\n", mermaidCode)
+    // mermaidCode = mermaidCode.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\'/g, "'");
+    props.setChart(mermaidCode);
+    props.setIsLoading(false);
+    // setPrompts([]);
+    // setIsFetchingMermaidCode(false);
   }
-
+  function cleanMermaidInput(input: any) {
+    // Use regex to remove "mermaid" at the front and any leading/trailing backticks
+    return input.replace(/^```mermaid\s*/, '').replace(/```$/, '').trim();
+}
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
@@ -173,7 +190,7 @@ const Chatbox: React.FC = () => {
   }, [prompts]);
 
   return (
-    <div className="flex justify-center items-center w-full h-screen">
+    <div className="flex justify-center items-center w-auto h-screen max-w-2/5 2xl:max-w-2/4">
       {/* chatbot */}
       <div className="flex flex-col items-start px-5 text-left justify-start pt-10 h-full w-full bg-gray-200 relative">
         <Bot size={48} color="#00f900" className="float-start" />
@@ -206,12 +223,14 @@ const Chatbox: React.FC = () => {
             <section className="flex flex-col space-y-4">
               {prompts.map((prompt) => (
                 <div key={prompt.id} className="flex flex-col space-y-5">
-                  <div className="bg-gray-100 p-4 text-sm rounded-lg rounded-tr-none shadow-md self-end text-left w-max max-w-full break-words ml-auto max-w-[60%]">
+                  <div className="bg-gray-100 p-4 text-sm rounded-lg rounded-tr-none shadow-md self-end text-left break-words ml-auto max-w-[70%]">
                     <strong className="text-green-500">You:</strong> {prompt.text}
                   </div>
                   {prompt.response && (
-                    <div className="bg-gray-100 p-4 text-sm rounded-lg rounded-tl-none shadow-md self-start text-left w-max max-w-full break-words mr-auto max-w-[60%]">
-                      <strong className="text-purple-600">Bot:</strong> {prompt.response}
+                    <div className="bg-gray-100 p-4 text-sm rounded-lg rounded-tl-none shadow-md self-start text-left break-words mr-auto max-w-[70%]">
+                      <strong className="text-purple-600">Bot:</strong> <div
+                                            dangerouslySetInnerHTML={{ __html: prompt.response }}
+                                          />
                     </div>
                   )}
                 </div>
@@ -221,7 +240,7 @@ const Chatbox: React.FC = () => {
         </div>
         <div className="w-full absolute bottom-0 left-0">
           <Form onSubmit={handleSubmit} disabled={isFetchingResponse} query={query} setQuery={setQuery} />
-          {!isFetchingResponse && prompts.length > 2 &&
+          {!isFetchingResponse && prompts.length >= 1 &&
             (<div className="w-full flex justify-center items-center mb-5">
               <button
                 className="bg-green-500 hover:bg-green-700 text-white flex items-center justify-between font-bold py-2 px-10 rounded"
