@@ -1,4 +1,6 @@
-import AppWrapper from "./excalidraw/appWrapper";
+import dynamic from 'next/dynamic';
+
+const AppWrapper = dynamic(() => import('./excalidraw/appWrapper'), { ssr: false });
 
 export default function Home() {
   return (
