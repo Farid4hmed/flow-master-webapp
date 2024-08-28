@@ -4,18 +4,17 @@ import { Excalidraw } from '@excalidraw/excalidraw';
 import mermaidToExcalidrawElements from './mermaidToExcali';
 
 export default function ExcalidrawWrapper(props: any) {
-  const [elements, setElements] = useState([]); // State to store Excalidraw elements
+  const [elements, setElements] = useState([]);
   console.log("chart\n", props.chart)
   useEffect(() => {
     const convertMermaidToElements = async () => {
-      const result: any = await mermaidToExcalidrawElements(props.chart); // Convert the mermaid chart to Excalidraw elements
-      setElements(result); // Set the resulting elements
+      const result: any = await mermaidToExcalidrawElements(props.chart); 
+      setElements(result); 
     };
 
-    convertMermaidToElements(); // Call the function whenever props.chart changes
-  }, [props.chart]); // Dependency array ensures this effect runs whenever props.chart changes
+    convertMermaidToElements();
+  }, [props.chart]);
 
-  // Show a loading indicator while loading
   if (props.isLoading) {
     return <div className="w-full h-full bg-gray-100 flex justify-center items-center">
       <div
@@ -46,11 +45,11 @@ export default function ExcalidrawWrapper(props: any) {
             <div className="w-3/5 h-screen">
               <Excalidraw
                 initialData={{
-                  elements, // Dynamically set elements
-                  appState: { zenModeEnabled: true }, // Application state for Excalidraw
-                  scrollToContent: true, // Auto-scroll to content
+                  elements, 
+                  appState: { zenModeEnabled: true },
+                  scrollToContent: true,
                 }}
-                key={props.chart} // Use a key to force re-render Excalidraw component on data change
+                key={props.chart} 
               />
             </div>
           </div>

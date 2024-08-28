@@ -125,19 +125,16 @@ const Chatbox: any = (props: any) => {
     const textId = uuidv4();
     console.log('userId: ', userId, ", requestId: ", reqId);
   
-    // Set initial response to "Bot is typing..."
     const newPrompt = {
       id: textId,
       text: query,
       response: "<em>Bot is typing...</em>"
     };
   
-    // Add the user prompt with "Bot is typing..." response
     setPrompts((prevPrompts) => [...prevPrompts, newPrompt]);
     setSubmitted(true);
     setIsFetchingResponse(true);
   
-    // Fetch the chatbot response
     const chatBotResp = await getChatBotResponse(userId, reqId, query);
     const wantsToDraw = false;
   
@@ -148,7 +145,6 @@ const Chatbox: any = (props: any) => {
       console.log("doesn't want to draw", reqId, userId);
     }
   
-    // Update the response with the actual API response
     setPrompts((prevPrompts) =>
       prevPrompts.map((prompt) =>
         prompt.id === textId ? { ...prompt, response: chatBotResp } : prompt
@@ -177,7 +173,6 @@ const Chatbox: any = (props: any) => {
     // setIsFetchingMermaidCode(false);
   }
   function cleanMermaidInput(input: any) {
-    // Use regex to remove "mermaid" at the front and any leading/trailing backticks
     return input.replace(/^```mermaid\s*/, '').replace(/```$/, '').trim();
 }
   useEffect(() => {
