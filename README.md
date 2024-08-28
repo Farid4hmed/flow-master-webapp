@@ -16,13 +16,6 @@ Welcome to **Solutions Mapper** – an interactive tool designed to help you gen
 - Draw, annotate, and create visual representations to enhance your ideas.
 - Real-time editing with an intuitive, user-friendly interface.
 
-## 📸 Screenshots
-
-![Chatbot in Action](path/to/chatbot-screenshot.png)
-*Chatbot generating tailored solutions*
-
-![Excalidraw Editor](path/to/excalidraw-screenshot.png)
-*Excalidraw Editor for modifying solutions*
 
 ## 🛠️ Installation
 
