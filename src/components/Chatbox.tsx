@@ -270,7 +270,7 @@ const Chatbox: any = (props: any) => {
                 >
                   <p className="text-xs text-gray-500">Component</p>
                 </button>
-                <button
+                {/* <button
                   className="h-10 text-center hover:pointer hover:bg-gray-100 shadow-md hover:shadow-lg border border-gray-400 rounded flex items-center justify-center transition-shadow duration-300"
                   onClick={() =>
                     setQuery(
@@ -287,7 +287,7 @@ const Chatbox: any = (props: any) => {
                   }
                 >
                   <p className="text-xs text-gray-500">ER Diagram</p>
-                </button>
+                </button> */}
               </div>
             </div>
           )}

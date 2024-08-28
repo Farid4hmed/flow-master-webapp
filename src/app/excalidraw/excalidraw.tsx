@@ -15,7 +15,9 @@ export default function ExcalidrawWrapper(props: any) {
     convertMermaidToElements(props.chart);
 
     if (!elements) {
-      convertMermaidToElements(props.chart);
+      convertMermaidToElements(`graph TD
+    A["Couldn't Generate Diagram, Please Try Regenerating"]
+`);
     }
 
   }, [props.chart]);
