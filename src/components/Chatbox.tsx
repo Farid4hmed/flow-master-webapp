@@ -128,7 +128,7 @@ const Chatbox: any = (props: any) => {
     const newPrompt = {
       id: textId,
       text: query,
-      response: "<em>Bot is typing...</em>"
+      response: "<em>...</em>"
     };
   
     setPrompts((prevPrompts) => [...prevPrompts, newPrompt]);
