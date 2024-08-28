@@ -14,7 +14,7 @@ export default function AppWrapper() {
     }, []);
     return (
         <section className="w-screen h-screen flex flex-row">
-            <div className="w-2/5 2xl:w-2/4 h-full">
+            <div className="w-2/5 2xl:w-1/4 h-full">
                 <Chatbox setChart={setChart} setIsLoading={setIsLoading} />
             </div>
             <div className="w-3/5 2xl:w-3/4 h-full">

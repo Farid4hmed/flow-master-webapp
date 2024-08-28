@@ -42,7 +42,7 @@ export default function ExcalidrawWrapper(props: any) {
       ) :
         (
           <div className="h-screen w-screen">
-            <div className="w-3/5 h-screen">
+            <div className="w-3/5 2xl:w-3/4 h-screen">
               <Excalidraw
                 initialData={{
                   elements, 
