@@ -13,11 +13,11 @@ export default function AppWrapper() {
         localStorage.clear();
     }, []);
     return (
-        <section className="w-full h-full flex flex-row">
-            <div className="w-2/5 2xl:w-1/4 h-screen">
+        <section className="w-full h-3/5 flex flex-row">
+            <div className="w-2/5 2xl:w-1/4 h-full">
                 <Chatbox setChart={setChart} setIsLoading={setIsLoading} />
             </div>
-            <div className="w-3/5 2xl:w-3/4 h-screen">
+            <div className="w-3/5 2xl:w-3/4 h-full">
                 <ExcalidrawWrapper chart={chart} isLoading={isLoading} />
             </div>
         </section>
