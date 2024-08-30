@@ -39,7 +39,7 @@ async function callGeminiAPI(prompt) {
 
 export async function getChatBotResponse(userId, reqId, query) {
     const conversationHistory = getConversationHistory(userId, reqId).map(entry => `User: ${entry.user}\nBot: ${entry.bot}`).join('\n');
-    const prompt = `Send the response in html body format only: ${conversationHistory}\nUser: ${query}\nBot:`;
+    const prompt = `Respond to users latest message, keep the response short, Send response in HTML format: ${conversationHistory}\nUser: ${query}\nBot:`;
 
     const botResponse = await callGeminiAPI(prompt);
 
@@ -61,10 +61,11 @@ export async function getMermaidCode(userId, reqId) {
     const summary = await callGeminiAPI(summaryPrompt);
 
     const mermaidPrompt = `
-    Convert the following summary into a Mermaid code version 11.0.2, only send as response the mermaid code with no other explanation, it should be a working code. try the keep the diagram very short and simple and always keep the syntax right, don't use paranthesis. Here is the summary to convert: ${summary}`;
+    Given is a summary of a conversation betweeen user and a bot, your task is to generate a mermaid code version 11.0.2 according what user wants to build, only send as response the mermaid code with no other explanation, it should be a working code. try the keep the diagram very short and simple and always keep the syntax right, don't use paranthesis. Here is the summary to convert: ${summary}`;
     
     const mermaidCode = await callGeminiAPI(mermaidPrompt);
 
+    const validatedMermaidCode = await callGeminiAPI(`Fix Syntax Error on the Mermaid code version 11.0.2, only send the mermaid code as response: ${mermaidCode}`);
 
-    return mermaidCode;
+    return validatedMermaidCode;
 }
