@@ -187,9 +187,9 @@ const Chatbox: any = (props: any) => {
   return (
     <div className="flex justify-center items-center w-auto h-screen max-w-2/5 2xl:max-w-2/4">
       {/* chatbot */}
-      <div className="flex flex-col items-start px-5 text-left justify-start pt-10 h-full w-full bg-gray-200 relative">
+      <div className="flex flex-col items-start px-5 text-left justify-start pt-10 h-full w-full bg-gray-200 relative no-scrollbar">
         <Bot size={48} color="#00f900" className="float-start" />
-        <div ref={chatContainerRef} className="no-scrollbar w-full px-4 md:px-0 pt-4" style={{ maxHeight: 'calc(70%)', transition: 'all 0.5s ease', overflowY: submitted ? "scroll" : "hidden" }}>
+        <div ref={chatContainerRef} className="w-full pt-4 no-scrollbar" style={{ maxHeight: 'calc(70%)', transition: 'all 0.5s ease', overflowY: submitted ? "scroll" : "hidden", scrollbarWidth: "none" }}>
           {/* {!submitted && (
             <div className="grid grid-cols-2 sm:mt-20 md:mt-40 gap-4">
               <button className="h-20 text-center hover:pointer hover:bg-gray-100 shadow-md hover:shadow-lg border border-gray-400 rounded flex items-center justify-center transition-shadow duration-300"

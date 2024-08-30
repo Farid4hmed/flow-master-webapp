@@ -39,7 +39,7 @@ async function callGeminiAPI(prompt) {
 
 export async function getChatBotResponse(userId, reqId, query) {
     const conversationHistory = getConversationHistory(userId, reqId).map(entry => `User: ${entry.user}\nBot: ${entry.bot}`).join('\n');
-    const prompt = `Respond to users latest message, keep the response short, Send response in HTML format: ${conversationHistory}\nUser: ${query}\nBot:`;
+    const prompt = `Respond to users latest message, keep the response short, Send response in HTML (don't add html at the front of the text): ${conversationHistory}\nUser: ${query}\nBot:`;
 
     const botResponse = await callGeminiAPI(prompt);
 
