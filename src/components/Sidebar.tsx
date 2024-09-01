@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Chatbox from "./Chatbox";
 import ExcalidrawWrapper from "@/app/excalidraw/excalidraw";
+import AppWrapper from "@/app/excalidraw/appWrapper";
 
 export function SidebarWrapper() {
   const links = [
@@ -117,13 +118,8 @@ export const LogoIcon = () => {
 // Dummy dashboard component with content
 const Dashboard = () => {
   return (
-    <section className="w-full h-full flex flex-row">
-      <div className="w-2/5 2xl:w-2/4 h-full">
-        <Chatbox />
-      </div>
-      <div className="w-3/5 2xl:w-3/4 h-full">
-        <ExcalidrawWrapper />
-      </div>
+    <section className="w-auto h-full flex flex-row">
+      <AppWrapper />
     </section>
   );
 };

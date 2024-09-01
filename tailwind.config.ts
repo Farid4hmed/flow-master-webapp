@@ -18,6 +18,25 @@ const config = {
       },
     },
     extend: {
+      zIndex: {
+        '1': '1',
+        '2': '2',
+        '3': '3',
+        '4': '4',
+        '5': '5',
+        '6': '6',
+        '7': '7',
+        '8': '8',
+        '9': '9',
+      },
+      bottom: {
+        '25': '25rem', // Adds a custom bottom-25 class with 25rem
+        '26': '26rem', // Adds a custom bottom-26 class with 26rem
+        '27': '27rem', // Adds a custom bottom-27 class with 27rem
+        '28': '28rem', // Adds a custom bottom-28 class with 28rem
+        '29': '29rem',
+        '30': '30rem', // Adds a custom bottom-30 class with 30rem
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

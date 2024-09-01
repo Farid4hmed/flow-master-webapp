@@ -2,9 +2,12 @@
 import React, { useState, useLayoutEffect } from 'react';
 import { Excalidraw } from '@excalidraw/excalidraw';
 import mermaidToExcalidrawElements from './mermaidToExcali';
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Bot, CircleArrowRight } from 'lucide-react';
+import Chatbox from '@/components/Chatbox';
 export default function ExcalidrawWrapper(props: any) {
   const [elements, setElements] = useState([]);
+  const [openChat, setOpenChat] = useState(true);
 
   useLayoutEffect(() => {
     const convertMermaidToElements = async (code: any) => {
@@ -33,7 +36,7 @@ export default function ExcalidrawWrapper(props: any) {
   return (
     <>
       {props.isLoading ? (
-        <div className="w-full h-full bg-gray-100 flex justify-center items-center">
+        <div className="w-auto h-screen bg-gray-100 flex justify-center items-center">
           <div
             className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-success motion-reduce:animate-[spin_1.5s_linear_infinite]"
             role="status">
@@ -43,9 +46,8 @@ export default function ExcalidrawWrapper(props: any) {
           </div>
         </div>
       ) : (
-        <div className="h-screen w-screen">
-          <div className="w-3/5 2xl:w-3/4 h-screen">
-          {elements && 
+        <div className="relative h-screen max-h-[95vh] sm:min-h-screen w-screen sm:max-w-[95vw] md:max-w-[95vw] lg:max-w-[95vw] xl:max-w-[95vw] 2xl:max-w-[97vw] 3xl:max-w-[98vw]">
+          {elements && (
             <Excalidraw
               initialData={{
                 elements,
@@ -54,8 +56,22 @@ export default function ExcalidrawWrapper(props: any) {
               }}
               key={props.chart}
             />
-        }
-          </div>
+          )}
+
+          <Avatar
+            className="absolute lg:top-0 lg:left-16 bottom-16 right-0 m-3 z-10 shadow-lg cursor-pointer"
+            onClick={() => setOpenChat(!openChat)}
+          >
+            <AvatarImage src="/chat.png" />
+            {/* <Bot size={48} color="#00f900" className="float-start" /> */}
+            <AvatarFallback>Chat</AvatarFallback>
+          </Avatar>
+
+          {openChat && (
+            <div className="absolute lg:top-14 lg:left-16 bottom-28 right-4 m-3 z-10 shadow-lg lg:w-2/6 2xl:w-1/5 lg:h-2/3 w-11/12 h-4/6 2xl:h-1/2 bg-white rounded-2xl rounded-tl-none">
+              <Chatbox />
+            </div>
+          )}
         </div>
       )}
     </>

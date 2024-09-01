@@ -185,9 +185,9 @@ const Chatbox: any = (props: any) => {
   }, [prompts]);
 
   return (
-    <div className="flex justify-center items-center w-auto h-screen max-w-2/5 2xl:max-w-2/4">
+    <div className="flex justify-center items-center h-full w-full rounded-xl shadow-xl m-0">
       {/* chatbot */}
-      <div className="flex flex-col items-start px-5 text-left justify-start pt-10 h-full w-full bg-gray-200 relative no-scrollbar">
+      <div className="flex flex-col items-start sm:px-10 px-4 text-left justify-start sm:pt-8 pt-4 2xl:px-10 h-full w-full bg-gray-200 relative no-scrollbar rounded-2xl rounded-tl-none">
         <Bot size={48} color="#00f900" className="float-start" />
         <div ref={chatContainerRef} className="w-full pt-4 no-scrollbar" style={{ maxHeight: 'calc(70%)', transition: 'all 0.5s ease', overflowY: submitted ? "scroll" : "hidden", scrollbarWidth: "none" }}>
           {/* {!submitted && (
@@ -217,7 +217,7 @@ const Chatbox: any = (props: any) => {
           {submitted && (
             <section className="flex flex-col space-y-4">
               {prompts.map((prompt) => (
-                <div key={prompt.id} className="flex flex-col space-y-5">
+                <div key={prompt.id} className="flex flex-col space-y-5 pb-14 sm:pb-6">
                   <div className="bg-gray-100 p-4 text-sm rounded-lg rounded-tr-none shadow-md self-end text-left break-words ml-auto max-w-[70%]">
                     <strong className="text-green-500">You:</strong> {prompt.text}
                   </div>
@@ -236,9 +236,9 @@ const Chatbox: any = (props: any) => {
         <div className="w-full absolute bottom-0 left-0">
           <Form onSubmit={handleSubmit} disabled={isFetchingResponse} query={query} setQuery={setQuery} />
           {!isFetchingResponse && prompts.length >= 1 &&
-            (<div className="w-full flex justify-center items-center mb-5">
+            (<div className="w-full flex justify-center items-center sm:mb-3 mb-2 mt-0">
               <button
-                className="bg-green-500 hover:bg-green-700 text-white flex items-center justify-between font-bold py-2 px-10 rounded"
+                className="bg-green-500 hover:bg-green-700 text-white flex items-center justify-between font-bold sm:py-2 py-1 px-10 rounded"
                 onClick={() => getMermaidCodeResponse()}
               >
                 Generate Solution
@@ -248,8 +248,8 @@ const Chatbox: any = (props: any) => {
             </div>)
           }
           {!submitted && query.length == 0 && (
-            <div className="w-full flex justify-center items-center">
-              <div className="grid grid-cols-2 sm:mt-5 md:-mt-4 mb-5 gap-4 w-3/4">
+            <div className="w-full flex justify-center items-center pt-2">
+              <div className="grid grid-cols-2 sm:mt-5 mt-1 md:-mt-4 sm:mb-5 mb-2 gap-4 w-3/4">
                 <button
                   className="h-10 text-center hover:pointer hover:bg-gray-100 shadow-md hover:shadow-lg border border-gray-400 rounded flex items-center justify-center transition-shadow duration-300"
                   onClick={() =>
