@@ -58,17 +58,21 @@ export default function ExcalidrawWrapper(props: any) {
             />
           )}
 
-          <Avatar
-            className="absolute lg:top-0 lg:left-16 bottom-16 right-0 m-3 z-10 shadow-lg cursor-pointer"
+          <div
+            className="absolute lg:top-0 max-h-max max-w-max lg:left-16 bottom-16 right-0 m-3 z-10 cursor-pointer rounded-md rounded-b-none"
             onClick={() => setOpenChat(!openChat)}
+            // style={{ background: openChat ? "#e5e7eb" : "none" }}
           >
-            <AvatarImage src="/chat.png" />
-            {/* <Bot size={48} color="#00f900" className="float-start" /> */}
-            <AvatarFallback>Chat</AvatarFallback>
-          </Avatar>
+            <Avatar
 
+            >
+              <AvatarImage src="/chat.png" />
+              {/* <Bot size={48} color="#00f900" className="float-start" /> */}
+              <AvatarFallback>Chat</AvatarFallback>
+            </Avatar>
+          </div>
           {openChat && (
-            <div className="absolute lg:top-14 lg:left-16 bottom-28 right-4 m-3 z-10 shadow-lg lg:w-2/6 2xl:w-1/5 lg:h-2/3 w-11/12 h-4/6 2xl:h-1/2 bg-white rounded-2xl rounded-tl-none">
+            <div className="absolute lg:top-12 lg:left-16 bottom-28 right-4 m-3 z-10 shadow-lg lg:w-2/6 2xl:w-1/5 lg:h-2/3 w-11/12 h-4/6 2xl:h-1/2 bg-white rounded-2xl rounded-tl-none">
               <Chatbox />
             </div>
           )}
