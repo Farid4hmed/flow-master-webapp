@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Form from "./form";
 import { v4 as uuidv4 } from 'uuid';
-import { getChatBotResponse, getMermaidCode } from "../api/chatbot";
+import { getChatBotResponse, getMermaidCode } from "../app/api/chatbot";
 import { Bot, CircleArrowRight } from 'lucide-react';
 import ExcalidrawWrapper from "@/app/excalidraw/excalidraw";
 
@@ -124,33 +124,33 @@ const Chatbox: any = (props: any) => {
     console.log("Submitted query:", query);
     const textId = uuidv4();
     console.log('userId: ', userId, ", requestId: ", reqId);
-  
+
     const newPrompt = {
       id: textId,
       text: query,
       response: "<em>...</em>"
     };
-  
+
     setPrompts((prevPrompts) => [...prevPrompts, newPrompt]);
     setSubmitted(true);
     setIsFetchingResponse(true);
-  
+
     const chatBotResp = await getChatBotResponse(userId, reqId, query);
     const wantsToDraw = false;
-  
+
     if (wantsToDraw) {
       console.log("WantsToDraw", reqId, userId);
       getMermaidCodeResponse();
     } else {
       console.log("doesn't want to draw", reqId, userId);
     }
-  
+
     setPrompts((prevPrompts) =>
       prevPrompts.map((prompt) =>
         prompt.id === textId ? { ...prompt, response: chatBotResp } : prompt
       )
     );
-  
+
     setIsFetchingResponse(false);
   };
   // console.log('currChart', chart);
@@ -159,12 +159,13 @@ const Chatbox: any = (props: any) => {
     props.setIsLoading(true);
     console.log("here")
     // setIsFetchingMermaidCode(true)
-    
+
     let response = await getMermaidCode(userId, reqId);
-    
+
     let mermaidCode = response;
     mermaidCode = cleanMermaidInput(mermaidCode);
-  
+
+
     // mermaidCode = mermaidCode.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\'/g, "'");
     props.setChart(mermaidCode);
     props.setIsLoading(false);
@@ -173,7 +174,7 @@ const Chatbox: any = (props: any) => {
   }
   function cleanMermaidInput(input: any) {
     return input.replace(/^```mermaid\s*/, '').replace(/```$/, '').trim();
-}
+  }
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
@@ -187,7 +188,7 @@ const Chatbox: any = (props: any) => {
     <div className="flex justify-center items-center h-full w-full rounded-xl shadow-xl m-0">
       {/* chatbot */}
       <div className="flex flex-col items-start sm:px-10 px-4 text-left justify-start sm:pt-8 pt-4 2xl:px-10 h-full w-full bg-gray-200 relative no-scrollbar rounded-2xl rounded-tl-none">
-        <Bot size={48} color="#00f900" className="float-start" />
+        <img src="/chat-bot.png" className="float-start h-10 w-10" />
         <div ref={chatContainerRef} className="w-full pt-4 no-scrollbar" style={{ maxHeight: 'calc(70%)', transition: 'all 0.5s ease', overflowY: submitted ? "scroll" : "hidden", scrollbarWidth: "none" }}>
           {/* {!submitted && (
             <div className="grid grid-cols-2 sm:mt-20 md:mt-40 gap-4">
@@ -223,8 +224,8 @@ const Chatbox: any = (props: any) => {
                   {prompt.response && (
                     <div className="bg-gray-100 p-4 text-sm rounded-lg rounded-tl-none shadow-md self-start text-left break-words mr-auto max-w-[70%]">
                       <strong className="text-purple-600">Bot:</strong> <div
-                                            dangerouslySetInnerHTML={{ __html: prompt.response }}
-                                          />
+                        dangerouslySetInnerHTML={{ __html: prompt.response }}
+                      />
                     </div>
                   )}
                 </div>

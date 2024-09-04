@@ -112,6 +112,8 @@ export default function LoginForm() {
             redirect: false,
         })
 
+        console.log("Login Response -", response)
+
         if (response?.ok) {
             router.push("/")
             router.refresh()
@@ -155,7 +157,7 @@ export default function LoginForm() {
 
             if (signInResponse?.ok) {
                 router.push("/")
-                router.refresh()
+                // router.refresh()
             }
 
         }
@@ -166,7 +168,6 @@ export default function LoginForm() {
     async function sendVerificationEmail(email: string) {
         const otp = Math.floor(100000 + Math.random() * 900000)
         setCurrOtp(otp.toString())
-
         const res = await fetch("/api/auth/sendgrid", {
             body: JSON.stringify({
                 email: email,

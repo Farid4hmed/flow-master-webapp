@@ -61,7 +61,7 @@ export async function getMermaidCode(userId, reqId) {
     const summary = await callGeminiAPI(summaryPrompt);
 
     const mermaidPrompt = `
-    Given is a summary of a conversation betweeen user and a bot, your task is to generate a mermaid code version 11.0.2 according what user wants to build, only send as response the mermaid code with no other explanation, it should be a working code. try the keep the diagram very short and simple and always keep the syntax right, don't use paranthesis. Here is the summary to convert: ${summary}`;
+    Given is a summary of a conversation betweeen user and a bot, your task is to generate a mermaid code version 11.0.2 according what user wants to build ( The use of square brackets ([" "]) around the subgraph names allows for spaces in the names.), only send as response the mermaid code with no other explanation, it should be a working code. try the keep the diagram very short and simple and always keep the syntax right, don't use paranthesis. Here is the summary to convert: ${summary}`;
     
     const mermaidCode = await callGeminiAPI(mermaidPrompt);
 

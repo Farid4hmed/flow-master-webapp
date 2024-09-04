@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
 import {
@@ -9,13 +9,15 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-// import Image from "next/image";
 import { cn } from "@/lib/utils";
-import Chatbox from "./Chatbox";
-import ExcalidrawWrapper from "@/app/excalidraw/excalidraw";
 import AppWrapper from "@/app/excalidraw/appWrapper";
+import { signOut } from "next-auth/react"
+import Logout from "./logout";
 
-export function SidebarWrapper() {
+export function SidebarWrapper({ children, ...props }: any) {
+
+  const { session } = props;
+
   const links = [
     {
       label: "Dashboard",
@@ -37,15 +39,36 @@ export function SidebarWrapper() {
       icon: (
         <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
-    },
-    {
-      label: "Logout",
-      href: "#",
-      icon: (
-        <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
+    }
+    // ,
+    // {
+    //   label: "Logout",
+    //   href: "#",
+    //   icon: (
+    //     <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+    //   ),
+    // },
   ];
+
+  const logoutLink = {
+    label: "Logout",
+    href: "#",
+    icon: (
+      <IconArrowLeft className="text-neutral-700 text-center dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+    ),
+  };
+
+  async function handleLogout() {
+    await signOut()
+  }
+
+  const loginLink = {
+    label: "Login",
+    href: "/login",
+    icon: (
+      <img src="/login.png" className="text-neutral-700 text-center dark:text-neutral-200 h-6 w-6 flex-shrink-0" />
+    ),
+  };
   const [open, setOpen] = useState(false);
   return (
     <div
@@ -65,21 +88,20 @@ export function SidebarWrapper() {
             </div>
           </div>
           <div>
-            {/* <SidebarLink
-              link={{
-                label: "Manu Arora",
-                href: "#",
-                icon: (
-                //   <Image
-                //     src="https://assets.aceternity.com/manu.png"
-                //     className="h-7 w-7 flex-shrink-0 rounded-full"
-                //     width={50}
-                //     height={50}
-                //     alt="Avatar"
-                //   />
-                ),
-              }}
-            /> */}
+            <div className={`mt-auto p-4 ${!open ? 'flex justify-center items-center' : ''}`}>
+              {!!session ? (
+                <div
+                  onClick={handleLogout}
+                  className={`flex items-center w-full p-2 cursor-pointer rounded-md ${open ? 'justify-start' : 'justify-center'
+                    }`}
+                >
+                  <IconArrowLeft className="text-neutral-700 text-center dark:text-neutral-200 h-5 w-5 flex-shrink-0 mr-2" />
+                  {open && <span>Logout</span>}
+                </div>
+              ) : (
+                <SidebarLink link={loginLink} />
+              )}
+            </div>
           </div>
         </SidebarBody>
       </Sidebar>
@@ -93,13 +115,13 @@ export const Logo = () => {
       href="#"
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
     >
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
+      <img src="/blueprint.png" className="h-6 w-7 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="font-medium text-black dark:text-white whitespace-pre"
       >
-        Acet Labs
+        Solutions Mapper
       </motion.span>
     </Link>
   );
@@ -110,7 +132,7 @@ export const LogoIcon = () => {
       href="#"
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
     >
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
+      <img src="/blueprint.png" className="h-6 w-7 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
     </Link>
   );
 };
