@@ -165,7 +165,6 @@ const Chatbox: any = (props: any) => {
     let mermaidCode = response;
     mermaidCode = cleanMermaidInput(mermaidCode);
   
-    console.log("THE MERMAID CODE\n", mermaidCode)
     // mermaidCode = mermaidCode.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\'/g, "'");
     props.setChart(mermaidCode);
     props.setIsLoading(false);

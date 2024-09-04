@@ -7,7 +7,6 @@ import { Bot, CircleArrowRight } from 'lucide-react';
 
 export default function AppWrapper() {
     const [chart, setChart] = useState(``);
-    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         localStorage.clear();
@@ -20,8 +19,8 @@ export default function AppWrapper() {
 
             {/* ExcalidrawWrapper to take the remaining width */}
             <div className="flex-1 h-full">
-                
-                <ExcalidrawWrapper chart={chart} isLoading={isLoading} />
+
+                <ExcalidrawWrapper chart={chart} setChart={setChart} />
             </div>
         </section>
     );
