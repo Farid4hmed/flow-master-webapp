@@ -2,9 +2,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import Form from "./form";
 import { v4 as uuidv4 } from 'uuid';
-import { getChatBotResponse, getMermaidCode } from "../api/chatbot";
+import { getChatBotResponse, getMermaidCode } from "../app/api/chatbot";
 import { Bot, CircleArrowRight } from 'lucide-react';
-import ExcalidrawWrapper from "@/app/excalidraw/excalidraw";
+import { ReloadIcon } from "@radix-ui/react-icons"
+
+import { Button } from "@/components/ui/button"
 
 const generateUUID = () => {
   const newId = uuidv4();
@@ -124,33 +126,33 @@ const Chatbox: any = (props: any) => {
     console.log("Submitted query:", query);
     const textId = uuidv4();
     console.log('userId: ', userId, ", requestId: ", reqId);
-  
+
     const newPrompt = {
       id: textId,
       text: query,
       response: "<em>...</em>"
     };
-  
+
     setPrompts((prevPrompts) => [...prevPrompts, newPrompt]);
     setSubmitted(true);
     setIsFetchingResponse(true);
-  
+
     const chatBotResp = await getChatBotResponse(userId, reqId, query);
     const wantsToDraw = false;
-  
+
     if (wantsToDraw) {
       console.log("WantsToDraw", reqId, userId);
       getMermaidCodeResponse();
     } else {
       console.log("doesn't want to draw", reqId, userId);
     }
-  
+
     setPrompts((prevPrompts) =>
       prevPrompts.map((prompt) =>
         prompt.id === textId ? { ...prompt, response: chatBotResp } : prompt
       )
     );
-  
+
     setIsFetchingResponse(false);
   };
   // console.log('currChart', chart);
@@ -159,13 +161,13 @@ const Chatbox: any = (props: any) => {
     props.setIsLoading(true);
     console.log("here")
     // setIsFetchingMermaidCode(true)
-    
+
     let response = await getMermaidCode(userId, reqId);
-    
+
     let mermaidCode = response;
     mermaidCode = cleanMermaidInput(mermaidCode);
-  
-    console.log("THE MERMAID CODE\n", mermaidCode)
+
+
     // mermaidCode = mermaidCode.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\'/g, "'");
     props.setChart(mermaidCode);
     props.setIsLoading(false);
@@ -174,7 +176,7 @@ const Chatbox: any = (props: any) => {
   }
   function cleanMermaidInput(input: any) {
     return input.replace(/^```mermaid\s*/, '').replace(/```$/, '').trim();
-}
+  }
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
@@ -185,10 +187,10 @@ const Chatbox: any = (props: any) => {
   }, [prompts]);
 
   return (
-    <div className="flex justify-center items-center w-auto h-screen max-w-2/5 2xl:max-w-2/4">
+    <div className="flex justify-center items-center h-full w-full rounded-xl shadow-xl m-0">
       {/* chatbot */}
-      <div className="flex flex-col items-start px-5 text-left justify-start pt-10 h-full w-full bg-gray-200 relative no-scrollbar">
-        <Bot size={48} color="#00f900" className="float-start" />
+      <div className="flex flex-col items-start sm:px-10 px-4 text-left justify-start sm:pt-8 pt-4 2xl:px-10 h-full w-full bg-gray-200 relative no-scrollbar rounded-2xl rounded-tl-4xl">
+        {/* <img src="/chat-bot.png" className="float-start h-10 w-10" /> */}
         <div ref={chatContainerRef} className="w-full pt-4 no-scrollbar" style={{ maxHeight: 'calc(70%)', transition: 'all 0.5s ease', overflowY: submitted ? "scroll" : "hidden", scrollbarWidth: "none" }}>
           {/* {!submitted && (
             <div className="grid grid-cols-2 sm:mt-20 md:mt-40 gap-4">
@@ -217,15 +219,15 @@ const Chatbox: any = (props: any) => {
           {submitted && (
             <section className="flex flex-col space-y-4">
               {prompts.map((prompt) => (
-                <div key={prompt.id} className="flex flex-col space-y-5">
+                <div key={prompt.id} className="flex flex-col space-y-5 pb-14 sm:pb-6">
                   <div className="bg-gray-100 p-4 text-sm rounded-lg rounded-tr-none shadow-md self-end text-left break-words ml-auto max-w-[70%]">
                     <strong className="text-green-500">You:</strong> {prompt.text}
                   </div>
                   {prompt.response && (
                     <div className="bg-gray-100 p-4 text-sm rounded-lg rounded-tl-none shadow-md self-start text-left break-words mr-auto max-w-[70%]">
                       <strong className="text-purple-600">Bot:</strong> <div
-                                            dangerouslySetInnerHTML={{ __html: prompt.response }}
-                                          />
+                        dangerouslySetInnerHTML={{ __html: prompt.response }}
+                      />
                     </div>
                   )}
                 </div>
@@ -236,20 +238,25 @@ const Chatbox: any = (props: any) => {
         <div className="w-full absolute bottom-0 left-0">
           <Form onSubmit={handleSubmit} disabled={isFetchingResponse} query={query} setQuery={setQuery} />
           {!isFetchingResponse && prompts.length >= 1 &&
-            (<div className="w-full flex justify-center items-center mb-5">
-              <button
-                className="bg-green-500 hover:bg-green-700 text-white flex items-center justify-between font-bold py-2 px-10 rounded"
+            (<div className="w-full flex justify-center items-center sm:mb-3 mb-2 mt-0">
+              {!props.isLoading ? <Button
+                className="bg-green-500 hover:bg-green-700"
                 onClick={() => getMermaidCodeResponse()}
               >
                 Generate Solution
                 <CircleArrowRight size={24} color="#feffff" className="ml-3" />
-              </button>
-
+              </Button>
+                :
+                <Button disabled>
+                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin text-white" />
+                  Generating Solution...
+                </Button>
+              }
             </div>)
           }
           {!submitted && query.length == 0 && (
-            <div className="w-full flex justify-center items-center">
-              <div className="grid grid-cols-2 sm:mt-5 md:-mt-4 mb-5 gap-4 w-3/4">
+            <div className="w-full flex justify-center items-center pt-2">
+              <div className="grid grid-cols-2 sm:mt-5 mt-1 md:-mt-4 sm:mb-5 mb-2 gap-4 w-3/4">
                 <button
                   className="h-10 text-center hover:pointer hover:bg-gray-100 shadow-md hover:shadow-lg border border-gray-400 rounded flex items-center justify-center transition-shadow duration-300"
                   onClick={() =>

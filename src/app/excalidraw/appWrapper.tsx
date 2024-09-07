@@ -2,23 +2,25 @@
 import React, { useEffect, useState } from "react";
 import Chatbox from "@/components/Chatbox";
 import ExcalidrawWrapper from "./excalidraw";
-// import { SidebarWrapper } from "@/components/Sidebar";
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Bot, CircleArrowRight } from 'lucide-react';
 
 export default function AppWrapper() {
     const [chart, setChart] = useState(``);
-    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         localStorage.clear();
     }, []);
+
     return (
-        <section className="w-full h-full flex flex-row">
-            <div className="w-2/5 2xl:w-1/4 h-screen">
-                <Chatbox setChart={setChart} setIsLoading={setIsLoading} />
-            </div>
-            <div className="w-3/5 2xl:w-3/4 h-screen">
-                <ExcalidrawWrapper chart={chart} isLoading={isLoading} />
+        <section className="w-screen max-w-screen h-screen flex flex-row relative">
+            {/* Your other components */}
+
+
+            {/* ExcalidrawWrapper to take the remaining width */}
+            <div className="flex-1 h-full">
+
+                <ExcalidrawWrapper chart={chart} setChart={setChart} />
             </div>
         </section>
     );

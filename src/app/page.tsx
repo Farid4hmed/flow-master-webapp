@@ -1,11 +1,18 @@
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
+import { getServerSession } from "next-auth";
+import { SidebarWrapper } from '@/components/Sidebar';
 
-const AppWrapper = dynamic(() => import('./excalidraw/appWrapper'), { ssr: false });
+// const AppWrapper = dynamic(() => import('./excalidraw/appWrapper'), { ssr: false });
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession()
   return (
+
     <main className="w-screen h-screen flex flex-row overflow-hidden">
-      <AppWrapper />
+      {/* <Navigation session={session}> */}
+        <SidebarWrapper session={session} />
+      {/* </Navigation> */}
     </main>
+
   );
 }

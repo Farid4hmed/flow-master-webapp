@@ -18,13 +18,14 @@ const Form: React.FC<FormData> = ({ onSubmit, disabled, query, setQuery }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full flex justify-center items-center px-10 mb-5">
-      <div className="relative flex items-center rounded-full border-gray-200 py-2 w-full">
+    <form onSubmit={handleSubmit} className="w-full flex justify-center items-center sm:px-10 px-5 sm:mb-4 mb-1">
+      <div className="relative flex items-center rounded-full border-gray-200 sm:py-0 py-1 w-full">
         <input
           type="text"
           value={query}
+          placeholder="Express that what you want to design..."
           onChange={e => {setQuery(e.target.value)}}
-          className="appearance-none bg-[#F3F5F4] border-none w-full rounded-full text-gray-700 py-4 px-10 md:pl-4 leading-tight focus:outline-none"
+          className="appearance-none bg-[#F3F5F4] border-none w-full rounded-full text-gray-700 py-4 px-10 md:pl-4 pl-2 leading-tight focus:outline-none"
           required
           disabled={disabled}
         />
