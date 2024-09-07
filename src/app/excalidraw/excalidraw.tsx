@@ -5,6 +5,7 @@ import mermaidToExcalidrawElements from './mermaidToExcali';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bot, CircleArrowRight } from 'lucide-react';
 import Chatbox from '@/components/Chatbox';
+
 export default function ExcalidrawWrapper(props: any) {
 
   const [elements, setElements] = useState([]);
@@ -62,7 +63,7 @@ export default function ExcalidrawWrapper(props: any) {
         />
 
         <div
-          className="absolute lg:top-0 max-h-max max-w-max lg:left-16 bottom-16 right-0 m-3 z-10 cursor-pointer rounded-md rounded-b-none"
+          className="absolute lg:top-0 max-h-max max-w-max lg:left-16 bottom-16 right-0 m-3 z-20 cursor-pointer rounded-md rounded-b-none"
           onClick={() => setOpenChat(!openChat)}
         >
           <Avatar>
@@ -71,8 +72,8 @@ export default function ExcalidrawWrapper(props: any) {
           </Avatar>
         </div>
         {openChat && (
-          <div className="absolute lg:top-12 lg:left-16 bottom-28 right-4 m-3 z-10 shadow-lg lg:w-2/6 2xl:w-1/5 lg:h-2/3 w-11/12 h-4/6 2xl:h-1/2 bg-white rounded-2xl rounded-tl-none">
-            <Chatbox setIsLoading={setIsLoading} setChart={props.setChart} />
+          <div className="absolute lg:top-5 lg:left-[5.1rem] bottom-28 right-4 m-3 z-10 shadow-lg lg:w-2/6 2xl:w-1/5 lg:h-2/3 w-11/12 h-4/6 2xl:h-1/2 bg-white rounded-2xl rounded-tl-none">
+            <Chatbox setIsLoading={setIsLoading} isLoading={isLoading} setChart={props.setChart} />
           </div>
         )}
       </div>

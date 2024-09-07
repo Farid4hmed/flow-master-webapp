@@ -4,7 +4,9 @@ import Form from "./form";
 import { v4 as uuidv4 } from 'uuid';
 import { getChatBotResponse, getMermaidCode } from "../app/api/chatbot";
 import { Bot, CircleArrowRight } from 'lucide-react';
-import ExcalidrawWrapper from "@/app/excalidraw/excalidraw";
+import { ReloadIcon } from "@radix-ui/react-icons"
+
+import { Button } from "@/components/ui/button"
 
 const generateUUID = () => {
   const newId = uuidv4();
@@ -187,8 +189,8 @@ const Chatbox: any = (props: any) => {
   return (
     <div className="flex justify-center items-center h-full w-full rounded-xl shadow-xl m-0">
       {/* chatbot */}
-      <div className="flex flex-col items-start sm:px-10 px-4 text-left justify-start sm:pt-8 pt-4 2xl:px-10 h-full w-full bg-gray-200 relative no-scrollbar rounded-2xl rounded-tl-none">
-        <img src="/chat-bot.png" className="float-start h-10 w-10" />
+      <div className="flex flex-col items-start sm:px-10 px-4 text-left justify-start sm:pt-8 pt-4 2xl:px-10 h-full w-full bg-gray-200 relative no-scrollbar rounded-2xl rounded-tl-4xl">
+        {/* <img src="/chat-bot.png" className="float-start h-10 w-10" /> */}
         <div ref={chatContainerRef} className="w-full pt-4 no-scrollbar" style={{ maxHeight: 'calc(70%)', transition: 'all 0.5s ease', overflowY: submitted ? "scroll" : "hidden", scrollbarWidth: "none" }}>
           {/* {!submitted && (
             <div className="grid grid-cols-2 sm:mt-20 md:mt-40 gap-4">
@@ -237,14 +239,19 @@ const Chatbox: any = (props: any) => {
           <Form onSubmit={handleSubmit} disabled={isFetchingResponse} query={query} setQuery={setQuery} />
           {!isFetchingResponse && prompts.length >= 1 &&
             (<div className="w-full flex justify-center items-center sm:mb-3 mb-2 mt-0">
-              <button
-                className="bg-green-500 hover:bg-green-700 text-white flex items-center justify-between font-bold sm:py-2 py-1 px-10 rounded"
+              {!props.isLoading ? <Button
+                className="bg-green-500 hover:bg-green-700"
                 onClick={() => getMermaidCodeResponse()}
               >
                 Generate Solution
                 <CircleArrowRight size={24} color="#feffff" className="ml-3" />
-              </button>
-
+              </Button>
+                :
+                <Button disabled>
+                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin text-white" />
+                  Generating Solution...
+                </Button>
+              }
             </div>)
           }
           {!submitted && query.length == 0 && (
