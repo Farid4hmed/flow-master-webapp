@@ -112,7 +112,6 @@ export default function LoginForm() {
             redirect: false,
         })
 
-        console.log("Login Response -", response)
 
         if (response?.ok) {
             router.push("/")

@@ -1,11 +1,11 @@
 "use client"
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import Form from "./form";
 import { v4 as uuidv4 } from 'uuid';
 import { getChatBotResponse, getMermaidCode } from "../app/api/chatbot";
 import { Bot, CircleArrowRight } from 'lucide-react';
 import { ReloadIcon } from "@radix-ui/react-icons"
-
+import { AppContext } from "./context";
 import { Button } from "@/components/ui/button"
 
 const generateUUID = () => {
@@ -109,23 +109,22 @@ graph TD
 
 const Chatbox: any = (props: any) => {
   // let setChart = props.setChart;
+  const { prompts, addPrompt, updatePrompt } = useContext(AppContext);
   let newId = generateUUID();
   let newReqId = generateUUID();
   const [count, setCount] = useState(0);
   // const [chart, setChart] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(prompts.length > 0);
   const [userId, setUserId] = useState(newId);
   const [reqId, setReqId] = useState(newReqId);
-  const [prompts, setPrompts] = useState<{ id: string; text: string; response: string; }[]>([]);
+  // const [prompts, setPrompts] = useState<{ id: string; text: string; response: string; }[]>([]);
   const [isFetchingResponse, setIsFetchingResponse] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [isFetchingMermaidCode, setIsFetchingMermaidCode] = useState(false);
   const [query, setQuery] = useState("");
 
   const handleSubmit = async (query: string) => {
-    console.log("Submitted query:", query);
     const textId = uuidv4();
-    console.log('userId: ', userId, ", requestId: ", reqId);
 
     const newPrompt = {
       id: textId,
@@ -133,7 +132,7 @@ const Chatbox: any = (props: any) => {
       response: "<em>...</em>"
     };
 
-    setPrompts((prevPrompts) => [...prevPrompts, newPrompt]);
+    addPrompt(newPrompt);
     setSubmitted(true);
     setIsFetchingResponse(true);
 
@@ -141,25 +140,17 @@ const Chatbox: any = (props: any) => {
     const wantsToDraw = false;
 
     if (wantsToDraw) {
-      console.log("WantsToDraw", reqId, userId);
       getMermaidCodeResponse();
     } else {
-      console.log("doesn't want to draw", reqId, userId);
     }
 
-    setPrompts((prevPrompts) =>
-      prevPrompts.map((prompt) =>
-        prompt.id === textId ? { ...prompt, response: chatBotResp } : prompt
-      )
-    );
+    updatePrompt(textId, { response: chatBotResp })
 
     setIsFetchingResponse(false);
   };
-  // console.log('currChart', chart);
 
   const getMermaidCodeResponse = async () => {
     props.setIsLoading(true);
-    console.log("here")
     // setIsFetchingMermaidCode(true)
 
     let response = await getMermaidCode(userId, reqId);
@@ -184,6 +175,8 @@ const Chatbox: any = (props: any) => {
         behavior: 'smooth'
       });
     }
+
+    
   }, [prompts]);
 
   return (
@@ -254,7 +247,7 @@ const Chatbox: any = (props: any) => {
               }
             </div>)
           }
-          {!submitted && query.length == 0 && (
+          {!submitted && query.length == 0 && prompts.length == 0 && (
             <div className="w-full flex justify-center items-center pt-2">
               <div className="grid grid-cols-2 sm:mt-5 mt-1 md:-mt-4 sm:mb-5 mb-2 gap-4 w-3/4">
                 <button

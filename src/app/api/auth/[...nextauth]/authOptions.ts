@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
 import { sql } from "@vercel/postgres";
 
-
 const authOptions: AuthOptions = {
   session: {
     strategy: "jwt",
@@ -30,17 +29,18 @@ const authOptions: AuthOptions = {
             console.log("User not found");
             return null;
           }
-          console.log("User found:", user);
+          console.log("User found:", user.id);
 
           const passwordCorrect = await compare(
             credentials?.password || "",
             user.password
           );
 
-          console.log({ passwordCorrect: passwordCorrect });
-
           if (passwordCorrect) {
-            return { id: user.id, email: user.email };
+            const projectsResp = await sql `SELECT * from sm_project where user_id = ${user.id}`;
+            const projects = projectsResp.rows;
+            // Return user information that will be included in the JWT
+            return { id: user.id, userId: user.id, email: user.email, projects: projects };
           }
 
           return null;
@@ -51,7 +51,26 @@ const authOptions: AuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }: any) {
+      // If a user is provided (after successful login), include userId and email in the token
+      if (user) {
+        token.userId = user.userId; // Set the userId from user object
+        token.email = user.email; // Set the email from user object
+        token.projects = user.projects
+      }
+      return token;
+    },
+    async session({ session, token }: any) {
+      // Include userId and email in the session object
+      if (token) {
+        session.userId = token.userId;
+        session.user.email = token.email;
+        session.projects = token.projects
+      }
+      return session;
+    },
+  },
 };
-
 
 export { authOptions };

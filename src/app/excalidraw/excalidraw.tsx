@@ -16,9 +16,7 @@ export default function ExcalidrawWrapper(props: any) {
   useLayoutEffect(() => {
     const convertMermaidToElements = async (code: any) => {
       try {
-        console.log("Code going in");
         const result: any = await mermaidToExcalidrawElements(code);
-        console.log("Result getting out ", result);
         setElements(result);
       } catch (error) {
         console.error("Error converting Mermaid to Excalidraw elements:", error);
@@ -37,7 +35,6 @@ export default function ExcalidrawWrapper(props: any) {
 
   }, [props.chart]); // Dependency on props.chart
 
-  console.log("elements\n", elements);
 
   return (
     <>

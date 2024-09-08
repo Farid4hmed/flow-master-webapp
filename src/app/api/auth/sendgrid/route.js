@@ -5,7 +5,6 @@ sendgrid.setApiKey(process.env.SENDGRID_API_KEY)
 export async function POST(request) {
     try {
         const { otp, recipient, sender, subject } = await request.json();
-        console.log(otp, recipient, sender, subject)
         const html = await getHtml(otp)
 
         const response = await sendgrid.send({
@@ -14,7 +13,6 @@ export async function POST(request) {
             subject: `${subject}`,
             html: `${html}`,
         })
-        console.log('sendgrid response', response)
   
         return new Response(JSON.stringify({ message: "success" }), {
             status: 200,

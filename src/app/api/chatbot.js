@@ -29,7 +29,6 @@ async function callGeminiAPI(prompt) {
         const response = await result.response;
         const text = await response.text(); 
 
-        // console.log("Generated Content:", text);
         return text
     } catch (error) {
         console.error('Error calling Gemini API:', error);
