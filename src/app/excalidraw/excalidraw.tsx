@@ -3,7 +3,6 @@ import React, { useState, useLayoutEffect } from 'react';
 import { Excalidraw } from '@excalidraw/excalidraw';
 import mermaidToExcalidrawElements from './mermaidToExcali';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bot, CircleArrowRight } from 'lucide-react';
 import Chatbox from '@/components/Chatbox';
 
 export default function ExcalidrawWrapper(props: any) {

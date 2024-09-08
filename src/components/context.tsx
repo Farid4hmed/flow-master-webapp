@@ -77,8 +77,6 @@ export const AppProvider = ({ children }: any) => {
         return storedCurrentProject ? JSON.parse(storedCurrentProject) : null;
     });
 
-    console.log("THE CURRPROJECT", currentProject)
-
     // // Synchronize prompts with currentProject.prompts whenever currentProject changes
     useEffect(() => {
         if (currentProject) {

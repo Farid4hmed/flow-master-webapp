@@ -54,11 +54,11 @@ export function SidebarWrapper({ children, ...props }: any) {
     },
   ];
 
-  const logoutLink = {
-    label: "Logout",
+  const Projects = {
+    label: "Projects",
     href: "#",
     icon: (
-      <IconArrowLeft className="text-neutral-700 text-center dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      <IconBrandTabler className="text-neutral-700 text-center dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
   };
 
@@ -111,10 +111,11 @@ export function SidebarWrapper({ children, ...props }: any) {
             {open ? <Logo /> : <LogoIcon />}
             <hr className="mt-2"></hr>
             {/* Projects Section */}
+            {!open && <div className="pt-12"> <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" /> </div>}
             {open &&
               <div className="pt-10">
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-md">Projects</h3>
+                  <SidebarLink link={Projects} />
                   {!!session && projects.length > 0 &&
                     <button
                       type="button"
