@@ -94,7 +94,7 @@ export function SidebarWrapper({ children, ...props }: any) {
   };
 
   useEffect(() => {
-    fetchProjectsByUserId(session.userId)
+    if(session)fetchProjectsByUserId(session.userId)
   }, [])
 
 
