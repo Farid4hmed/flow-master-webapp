@@ -36,10 +36,10 @@ export const AppContext = React.createContext<{
     updatePrompt: (id: string, updatedPrompt: Partial<Prompt>) => void;
     removePrompt: (id: string) => void;
     addProject: (project: Project) => void;
-    deleteProject: (index: number) => void;
-    closeEditOption: (index: number) => void;
-    handleOpenEditOption: (index: number) => void;
-    handleSaveProjectTitle: (index: number, newTitle: string) => void;
+    deleteProject: (projectId: string, userId: string) => void;
+    closeEditOption: (projectId: string) => void;
+    handleOpenEditOption: (projectId: string) => void;
+    handleSaveProjectTitle: (projectId: string, userId: string, newTitle: string) => void;
     changeCurrentProject: (project: CurrentProject) => void;
     fetchProjectsByUserId: (userId: number) => void;
 }>({
@@ -185,37 +185,89 @@ export const AppProvider = ({ children }: any) => {
     };
 
     // Function to open edit mode for a project
-    const handleOpenEditOption = (index: number) => {
+    const handleOpenEditOption = (projectId: string) => {
         setProjects((prevProjects) =>
             prevProjects.map((project, idx) =>
-                idx === index ? { ...project, edit: true } : project
+                project.id === projectId ? { ...project, edit: true } : project
             )
         );
     };
 
     // Function to save the project title
-    const handleSaveProjectTitle = (index: number, newTitle: string) => {
+    const handleSaveProjectTitle = async (projectId: string, userId: string,  newTitle: string) => {
         const trimmedTitle = newTitle.length > 22 ? newTitle.slice(0, 22) + '...' : newTitle;
+      
+        // Optimistically update the UI
         setProjects((prevProjects) =>
-            prevProjects.map((project, idx) =>
-                idx === index ? { ...project, title: trimmedTitle, edit: false } : project
-            )
+          prevProjects.map((project, idx) =>
+            project.id === projectId ? { ...project, title: trimmedTitle, edit: false } : project
+          )
         );
-        closeEditOption(index);
-    };
+      
+        try {
+          const response = await fetch("/api/projects/renameProjectTitle", {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ projectId, userId, newTitle: trimmedTitle }),
+          });
+      
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error updating project title:", errorData.error);
+      
+            // If the request failed, revert the optimistic update
+            setProjects((prevProjects) =>
+              prevProjects.map((project, idx) =>
+                project.id === projectId ? { ...project, title: project.title, edit: true } : project
+              )
+            );
+          }
+        } catch (error) {
+          console.error("Error updating project title:", error);
+      
+          // Revert the optimistic update in case of an error
+          setProjects((prevProjects) =>
+            prevProjects.map((project, idx) =>
+              project.id === projectId ? { ...project, title: project.title, edit: true } : project
+            )
+          );
+        }
+      
+        closeEditOption(projectId);
+      };
 
     // Function to delete a project
-    const deleteProject = (index: number) => {
-        setProjects((prevProjects) =>
-            prevProjects.filter((_, idx) => idx !== index)
-        );
-    };
+    const deleteProject = async (projectId: string, userId: string) => {
+        try {
+          const response = await fetch("/api/projects/deleteProject", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ projectId, userId }),
+          });
+      
+          if (response.ok) {
+            // Remove the project from the local state
+            setProjects((prevProjects) =>
+              prevProjects.filter((project) => project.id !== projectId)
+            );
+          } else {
+            const errorData = await response.json();
+            console.error("Error deleting project:", errorData.error);
+          }
+        } catch (error) {
+          console.error("Error deleting project:", error);
+        }
+      };
 
     // Function to close the edit option for a project
-    const closeEditOption = (index: number) => {
+    const closeEditOption = (projectId: string) => {
         setProjects((prevProjects) =>
             prevProjects.map((project, idx) =>
-                idx === index ? { ...project, edit: false } : project
+                project.id === projectId ? { ...project, edit: false } : project
             )
         );
     };
