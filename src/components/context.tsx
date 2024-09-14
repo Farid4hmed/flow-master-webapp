@@ -318,8 +318,11 @@ export const AppProvider = ({ children }: any) => {
 
     const fetchProjectsByUserId = async (userId: number) => {
         try {
-            const response = await fetch(`/api/projects/getAllProjects?userId=${userId}`, {
+            const response = await fetch(`/api/projects/getAllProjects`, {
                 method: 'GET',
+                body: JSON.stringify({
+                    userId: userId
+                }),
                 headers: {
                     'Content-Type': 'application/json',
                 }

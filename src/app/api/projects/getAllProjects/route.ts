@@ -4,8 +4,7 @@ import { sql } from "@vercel/postgres";
 export async function GET(request: Request) {
   try {
     // Get the userId from the query parameters
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
+    const { userId } = await request.json();
 
     // Validate that the userId is provided
     if (!userId) {
