@@ -58,9 +58,9 @@ export async function DELETE(request: Request) {
   }
 }
 
-// Export the handler so that it can be properly used by the framework
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// // Export the handler so that it can be properly used by the framework
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
