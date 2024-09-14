@@ -8,9 +8,9 @@ import { Bot, CircleArrowRight } from 'lucide-react';
 export default function AppWrapper() {
     const [chart, setChart] = useState(``);
 
-    useEffect(() => {
-        localStorage.clear();
-    }, []);
+    // useEffect(() => {
+    //     localStorage.clear();
+    // }, []);
 
     return (
         <section className="w-screen max-w-screen h-screen flex flex-row relative">

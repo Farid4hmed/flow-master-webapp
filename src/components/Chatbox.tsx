@@ -109,12 +109,12 @@ graph TD
 
 const Chatbox: any = (props: any) => {
   // let setChart = props.setChart;
-  const { prompts, addPrompt, updatePrompt } = useContext(AppContext);
+  const { prompts, addPrompt, updatePrompt, currentProject } = useContext(AppContext);
   let newId = generateUUID();
   let newReqId = generateUUID();
   const [count, setCount] = useState(0);
   // const [chart, setChart] = useState('');
-  const [submitted, setSubmitted] = useState(prompts.length > 0);
+  const [submitted, setSubmitted] = useState(false);
   const [userId, setUserId] = useState(newId);
   const [reqId, setReqId] = useState(newReqId);
   // const [prompts, setPrompts] = useState<{ id: string; text: string; response: string; }[]>([]);
@@ -176,7 +176,7 @@ const Chatbox: any = (props: any) => {
         behavior: 'smooth'
       });
     }
-
+    setSubmitted(prompts.length > 0)
     
   }, [prompts]);
 
