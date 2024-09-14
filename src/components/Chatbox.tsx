@@ -150,6 +150,7 @@ const Chatbox: any = (props: any) => {
   };
 
   const getMermaidCodeResponse = async () => {
+    console.log("getMermaidCodeResponse")
     props.setIsLoading(true);
     // setIsFetchingMermaidCode(true)
 
@@ -179,6 +180,7 @@ const Chatbox: any = (props: any) => {
     
   }, [prompts]);
 
+  console.log("ISLOADING ->  ", props.isLoading)
   return (
     <div className="flex justify-center items-center h-full w-full rounded-xl shadow-xl m-0">
       {/* chatbot */}

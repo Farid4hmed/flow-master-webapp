@@ -124,12 +124,51 @@ export const AppProvider = ({ children }: any) => {
 
     // Function to update an existing prompt
     const updatePrompt = (id: string, updatedPrompt: Partial<Prompt>) => {
-        setPrompts((prevPrompts) =>
-            prevPrompts.map((prompt) =>
-                prompt.id === id ? { ...prompt, ...updatedPrompt } : prompt
-            )
-        );
-    };
+        // Update the state locally and use the updated state to make the API call
+        setPrompts((prevPrompts) => {
+          // Create the new prompts array with the updated prompt
+          const updatedPrompts = prevPrompts.map((prompt) =>
+            prompt.id === id ? { ...prompt, ...updatedPrompt } : prompt
+          );
+      
+          // Call the API to save the updated prompts to the database
+          saveUpdatedPrompts(updatedPrompts);
+      
+          // Return the updated prompts to update the state
+          return updatedPrompts;
+        });
+      };
+      
+      // Function to save the updated prompts to the database
+      const saveUpdatedPrompts = async (latestPrompts: Prompt[]) => {
+        try {
+        if(currentProject){
+                const response = await fetch('/api/projects/savePrompt', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                projectId: currentProject.id, // Replace with the actual project ID
+                prompts: latestPrompts,
+                }),
+            });
+        
+            if (!response.ok) {
+                throw new Error('Failed to update the prompts in the database');
+            }
+        
+            const result = await response.json();
+            const updatedProject = result.project;
+        
+            // You can now use the updated project if needed
+            console.log('Updated project:', updatedProject);
+        }
+        else console.log("No Project Selected")
+        } catch (error) {
+          console.error('Error updating prompts in the database:', error);
+        }
+      };
 
     // Function to remove a prompt
     const removePrompt = (id: string) => {

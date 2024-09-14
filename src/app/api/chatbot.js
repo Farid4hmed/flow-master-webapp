@@ -50,6 +50,7 @@ export async function getChatBotResponse(userId, reqId, query) {
 }
 
 export async function getMermaidCode(userId, reqId) {
+    console.log("getMermaidCode")
     const conversationHistory = getConversationHistory(userId, reqId);
 
     if (conversationHistory.length === 0) {
