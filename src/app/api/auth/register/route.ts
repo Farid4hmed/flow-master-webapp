@@ -8,7 +8,6 @@ export async function POST(request: Request) {
 
     const hashedPassword = await hash(password, 10);
 
-    console.log('hashedPassword', hashedPassword)
 
     const checkUser = await sql`
         SELECT * FROM sm_user WHERE email = ${email}

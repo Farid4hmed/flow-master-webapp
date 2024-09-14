@@ -29,7 +29,6 @@ async function callGeminiAPI(prompt) {
         const response = await result.response;
         const text = await response.text(); 
 
-        // console.log("Generated Content:", text);
         return text
     } catch (error) {
         console.error('Error calling Gemini API:', error);
@@ -51,6 +50,7 @@ export async function getChatBotResponse(userId, reqId, query) {
 }
 
 export async function getMermaidCode(userId, reqId) {
+    console.log("getMermaidCode")
     const conversationHistory = getConversationHistory(userId, reqId);
 
     if (conversationHistory.length === 0) {
