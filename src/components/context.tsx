@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useLocalStorageState from 'use-local-storage-state'; // Import the new library
 
 // Define the structure of a prompt
@@ -33,6 +33,8 @@ export const AppContext = React.createContext<{
   prompts: Prompt[];
   projects: Project[];
   currentProject: CurrentProject | null;
+  chart: string;
+  changeChart: (mermaid: string) => void;
   addPrompt: (prompt: Prompt) => void;
   updatePrompt: (id: string, updatedPrompt: Partial<Prompt>) => void;
   removePrompt: (id: string) => void;
@@ -47,6 +49,8 @@ export const AppContext = React.createContext<{
   prompts: [],
   projects: [],
   currentProject: null,
+  chart: '',
+  changeChart: () => {},
   addPrompt: () => {},
   updatePrompt: () => {},
   removePrompt: () => {},
@@ -64,8 +68,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [prompts, setPrompts] = useLocalStorageState<Prompt[]>('prompts', { defaultValue: [] });
   const [projects, setProjects] = useLocalStorageState<Project[]>('projects', { defaultValue: [] });
   const [currentProject, setCurrentProject] = useLocalStorageState<CurrentProject | null>('currentProject', { defaultValue: null });
-
+  const [chart, setChart ] = useState(``);
   // Synchronize prompts with currentProject.prompts whenever currentProject changes
+
+
   useEffect(() => {
     if (currentProject) {
       setPrompts(currentProject.prompts);
@@ -85,6 +91,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   }, [prompts]);
 
+
+  const changeChart = (mermaid: string) => {
+    setChart(mermaid);
+  }
   // Function to add a new prompt
   const addPrompt = (prompt: Prompt) => {
     setPrompts((prevPrompts) => [...prevPrompts, prompt]);
@@ -298,6 +308,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <AppContext.Provider
       value={{
+        chart,
+        changeChart,
         prompts,
         projects,
         currentProject,
