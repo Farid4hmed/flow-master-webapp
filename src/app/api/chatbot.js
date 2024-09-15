@@ -15,7 +15,7 @@ function storeInLocalStorage(userId, reqId, query, response) {
 
 function getConversationHistory(userId, reqId) {
     const key = `${userId}_${reqId}`;
-    return JSON.parse(localStorage.getItem(key)) || [];
+    return JSON.parse(localStorage.getItem(key)) || JSON.parse(localStorage.getItem('currentProject'))?.prompts || [];
 }
 
 function clearConversationHistory(userId, reqId) {
