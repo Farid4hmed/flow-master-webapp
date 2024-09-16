@@ -136,7 +136,7 @@ const Chatbox: any = (props: any) => {
     setSubmitted(true);
     setIsFetchingResponse(true);
 
-    const chatBotResp = await getChatBotResponse(userId, reqId, query);
+    const chatBotResp = await getChatBotResponse(prompts, query);
     const wantsToDraw = false;
 
     if (wantsToDraw) {
@@ -154,7 +154,7 @@ const Chatbox: any = (props: any) => {
     props.setIsLoading(true);
     // setIsFetchingMermaidCode(true)
 
-    let response = await getMermaidCode(userId, reqId);
+    let response = await getMermaidCode(prompts);
 
     let mermaidCode = response;
     mermaidCode = cleanMermaidInput(mermaidCode);

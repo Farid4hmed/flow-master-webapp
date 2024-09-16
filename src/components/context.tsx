@@ -72,11 +72,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Synchronize prompts with currentProject.prompts whenever currentProject changes
 
 
-  useEffect(() => {
-    if (currentProject) {
-      setPrompts(currentProject.prompts);
-    }
-  }, [currentProject?.id]);
+  // useEffect(() => {
+  //   if (currentProject) {
+  //     setPrompts(currentProject.prompts);
+  //   }
+  // }, [currentProject?.id]);
 
   // Use effect to update projects whenever the prompts state changes
   useEffect(() => {
@@ -277,20 +277,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const changeCurrentProject = (project: CurrentProject) => {
     setCurrentProject(project);
+    if (project) {
+      setPrompts(project.prompts);
+    }
   };
 
   const fetchProjectsByUserId = async (userId: number) => {
     try {
-      const response = await fetch(`/api/projects/getAllProjects`, {
+      // Construct the URL with the userId as a query parameter
+      const response = await fetch(`/api/projects/getAllProjects?userId=${userId}`, {
         method: 'GET',
-        body: JSON.stringify({
-          userId: userId,
-        }),
         headers: {
           'Content-Type': 'application/json',
         },
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         setProjects(data.projects);
