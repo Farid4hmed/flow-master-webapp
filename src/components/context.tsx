@@ -27,7 +27,7 @@ interface CurrentProject {
   id: any;
   prompts: Prompt[];
   mermaid: string;
-  elements: [];
+  elements: any;
 }
 
 // Define the context with prompts, projects, current project, and their functions
@@ -72,9 +72,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
 
   // useEffect(() => {
-  //   if (currentProject) {
-  //     setPrompts(currentProject.prompts);
+  //   if (currentProject && currentProject.mermaid != "" && currentProject.elements && currentProject.elements.length === 0) {
+  //     let ele = convertMermaidToElements(currentProject.mermaid);
+  //     setCurrentProject((prevProj: any) =>
+  //       prevProj ? { ...prevProj, elements: ele } : null
+  //     );
   //   }
+
   // }, [currentProject?.id]);
 
   // Use effect to update projects whenever the prompts state changes
@@ -93,8 +97,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const changeChart = async (mermaid: string, id: string) => {
     if (mermaid !== "") {
+      // Convert Mermaid string to elements
       let ele = await convertMermaidToElements(mermaid);
   
+      // Update the state with the new mermaid data and elements
       setProjects((prevProjects) =>
         prevProjects.map((project) =>
           project.id === id
@@ -103,11 +109,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         )
       );
   
-      setCurrentProject((prevProj) => 
+      setCurrentProject((prevProj) =>
         prevProj ? { ...prevProj, mermaid: mermaid, elements: ele } : null
       );
+  
+      // Call the API to save the mermaid data
+      try {
+        const response = await fetch('/api/projects/saveMermaid', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            projectId: id,
+            mermaid: mermaid,
+          }),
+        });
+  
+        if (!response.ok) {
+          console.error('Failed to update mermaid:', response.statusText);
+        } else {
+          console.log('Mermaid data updated successfully.');
+        }
+      } catch (error) {
+        console.error('Error updating mermaid:', error);
+      }
     }
   };
+
 
   const convertMermaidToElements = async (code: any) => {
     try {
@@ -298,8 +327,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
-  const changeCurrentProject = (project: CurrentProject) => {
-    setCurrentProject(project);
+  const changeCurrentProject = async (project: CurrentProject) => {
+     if (project && (!project.elements || project.elements.length === 0)) {
+        let ele = await convertMermaidToElements(project.mermaid) || [];
+
+        setCurrentProject({
+          ...project,
+          elements: ele
+        });
+    }
+    else setCurrentProject(project);
+
     if (project) {
       setPrompts(project.prompts);
     }
