@@ -10,7 +10,7 @@ export default function ExcalidrawWrapper() {
   const [openChat, setOpenChat] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-
+  console.log("currProject", currentProject)
 
   return (
     <>

@@ -33,12 +33,6 @@ const Chatbox: any = (props: any) => {
     setIsFetchingResponse(true);
 
     const chatBotResp = await getChatBotResponse(prompts, query);
-    const wantsToDraw = false;
-
-    if (wantsToDraw) {
-      getMermaidCodeResponse();
-    } else {
-    }
 
     updatePrompt(textId, { response: chatBotResp })
 
@@ -46,7 +40,6 @@ const Chatbox: any = (props: any) => {
   };
 
   const getMermaidCodeResponse = async () => {
-    console.log("getMermaidCodeResponse")
     props.setIsLoading(true);
 
     let response = await getMermaidCode(prompts);
@@ -55,7 +48,7 @@ const Chatbox: any = (props: any) => {
     mermaidCode = cleanMermaidInput(mermaidCode);
 
 
-    props.setChart(mermaidCode, props.project.id);
+    props.setChart(mermaidCode, props.project?.id || '0');
     props.setIsLoading(false);
   }
   function cleanMermaidInput(input: any) {

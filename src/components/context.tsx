@@ -65,7 +65,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [prompts, setPrompts] = useLocalStorageState<Prompt[]>('prompts', { defaultValue: [] });
   const [projects, setProjects] = useLocalStorageState<Project[]>('projects', { defaultValue: [] });
-  const [currentProject, setCurrentProject] = useLocalStorageState<CurrentProject | null>('currentProject', { defaultValue: null });
+  const [currentProject, setCurrentProject] = useLocalStorageState<CurrentProject | any>('currentProject',
+    {
+      defaultValue: null
+    });
 
   useEffect(() => {
     setProjects((prevProjects: any) =>
@@ -81,9 +84,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
 
   const changeChart = async (mermaid: string, id: string) => {
-    if (mermaid !== "") {
+    if (mermaid != "") {
 
       let ele = await convertMermaidToElements(mermaid);
+
+      if (!currentProject) {
+        setCurrentProject(
+          {
+            title: "temp",
+            userId: "0",
+            id: "0",
+            prompts: [],
+            mermaid: mermaid,
+            elements: ele
+          }
+        )
+      }
+      else {
+        setCurrentProject((prevProj: any) =>
+          prevProj ? { ...prevProj, mermaid: mermaid, elements: ele } : null
+        );
+      }
 
       setProjects((prevProjects) =>
         prevProjects.map((project) =>
@@ -93,9 +114,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         )
       );
 
-      setCurrentProject((prevProj) =>
-        prevProj ? { ...prevProj, mermaid: mermaid, elements: ele } : null
-      );
+
 
       try {
         const response = await fetch('/api/projects/saveMermaid', {

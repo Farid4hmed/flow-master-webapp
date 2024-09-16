@@ -222,7 +222,7 @@ export function SidebarWrapper({ children, ...props }: any) {
                     <div className="flex items-center text-sm justify-center h-full text-center text-gray-500">
                       <span>
                         <Link href="/login" className="text-blue-500 underline">
-                          SignIn / SignUp
+                          Sign In
                         </Link>{" "}
                         to access projects
                       </span>
