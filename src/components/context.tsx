@@ -17,7 +17,7 @@ interface Project {
   edit: boolean;
   prompts: Prompt[];
   mermaid: string;
-  elements: [];
+  elements: any;
 }
 
 // Define the structure of the current project
@@ -345,14 +345,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const fetchProjectsByUserId = async (userId: number) => {
     try {
-      // Construct the URL with the userId as a query parameter
-      const response = await fetch(`/api/projects/getAllProjects?userId=${userId}`, {
-        method: 'GET',
+      // Make a POST request with the userId in the request body
+      const response = await fetch('/api/projects/getAllProjects', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ userId }), // Send userId in the request body
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         setProjects(data.projects);

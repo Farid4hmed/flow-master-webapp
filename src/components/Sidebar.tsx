@@ -91,7 +91,7 @@ export function SidebarWrapper({ children, ...props }: any) {
     const userId = session.userId;
     const title = "Project " + (projects.length + 1);
 
-    const newProject = { title: title, userId: userId, edit: false, id: '', mermaid: '', prompts: [] };
+    const newProject = { title: title, userId: userId, edit: false, id: '', mermaid: '', prompts: [], elements: [] };
     addProject(newProject);
 
     setAddingProj(false);

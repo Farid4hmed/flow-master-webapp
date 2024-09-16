@@ -1,17 +1,17 @@
 // app/api/projects/getProjects.ts
-import { sql } from "@vercel/postgres";
+import { sql } from '@vercel/postgres';
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   try {
-    const url = new URL(request.url);
-    const userId = url.searchParams.get('userId');
+    // Parse the request body to get the userId
+    const { userId } = await request.json();
 
     // Validate that the userId is provided
     if (!userId) {
-      return new Response(JSON.stringify({ error: "Missing userId" }), {
+      return new Response(JSON.stringify({ error: 'Missing userId' }), {
         status: 400,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
     }
@@ -25,15 +25,15 @@ export async function GET(request: Request) {
     return new Response(JSON.stringify({ projects: response.rows }), {
       status: 200,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
   } catch (error) {
-    console.error("Error fetching projects:", error);
-    return new Response(JSON.stringify({ error: "Failed to fetch projects" }), {
+    console.error('Error fetching projects:', error);
+    return new Response(JSON.stringify({ error: 'Failed to fetch projects' }), {
       status: 500,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
   }
