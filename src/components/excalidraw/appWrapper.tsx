@@ -1,6 +1,11 @@
 'use client'
 import React from "react";
-import ExcalidrawWrapper from "./excalidraw";
+import dynamic from 'next/dynamic';
+
+
+const ExcalidrawWrapper = dynamic(() => import('./excalidraw'), {
+    ssr: false, 
+});
 
 export default function AppWrapper() {
 
@@ -10,7 +15,7 @@ export default function AppWrapper() {
 
 
             <div className="flex-1 h-full">
-                    <ExcalidrawWrapper  />
+                <ExcalidrawWrapper />
             </div>
         </section>
     );

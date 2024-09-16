@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
-import useLocalStorageState from 'use-local-storage-state'; 
-import mermaidToExcalidrawElements from '@/app/excalidraw/mermaidToExcali';
+import useLocalStorageState from 'use-local-storage-state';
+// import mermaidToExcalidrawElements from '@/app/excalidraw/mermaidToExcali';
 
 interface Prompt {
   id: string;
@@ -71,7 +71,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setProjects((prevProjects: any) =>
       prevProjects.map((project: any) =>
         project.id === currentProject?.id
-          ? { ...project, prompts: prompts } 
+          ? { ...project, prompts: prompts }
           : project
       )
     );
@@ -84,7 +84,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (mermaid !== "") {
 
       let ele = await convertMermaidToElements(mermaid);
-  
+
       setProjects((prevProjects) =>
         prevProjects.map((project) =>
           project.id === id
@@ -92,11 +92,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             : project
         )
       );
-  
+
       setCurrentProject((prevProj) =>
         prevProj ? { ...prevProj, mermaid: mermaid, elements: ele } : null
       );
-  
+
       try {
         const response = await fetch('/api/projects/saveMermaid', {
           method: 'POST',
@@ -108,7 +108,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             mermaid: mermaid,
           }),
         });
-  
+
         if (!response.ok) {
           console.error('Failed to update mermaid:', response.statusText);
         } else {
@@ -123,6 +123,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const convertMermaidToElements = async (code: any) => {
     try {
+      // Dynamically import the mermaidToExcalidrawElements function
+      const { default: mermaidToExcalidrawElements } = await import('@/components/excalidraw/mermaidToExcali');
+
+      // Use the dynamically imported function
       const result: any = await mermaidToExcalidrawElements(code);
       return result;
     } catch (error) {
@@ -293,13 +297,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const changeCurrentProject = async (project: CurrentProject) => {
-     if (project && (!project.elements || project.elements.length === 0)) {
-        let ele = await convertMermaidToElements(project.mermaid) || [];
+    if (project && (!project.elements || project.elements.length === 0)) {
+      let ele = await convertMermaidToElements(project.mermaid) || [];
 
-        setCurrentProject({
-          ...project,
-          elements: ele
-        });
+      setCurrentProject({
+        ...project,
+        elements: ele
+      });
     }
     else setCurrentProject(project);
 
@@ -317,7 +321,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         },
         body: JSON.stringify({ userId }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         setProjects(data.projects);

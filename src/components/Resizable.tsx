@@ -4,7 +4,7 @@ import {
     ResizablePanelGroup,
   } from "@/components/ui/resizable"
 import Chatbox from "./Chatbox"
-import ExcalidrawWrapper from "@/app/excalidraw/excalidraw"
+import ExcalidrawWrapper from "./excalidraw/excalidraw"
   
   export function Resizable() {
     return (
