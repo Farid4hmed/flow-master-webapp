@@ -2,10 +2,8 @@ import { sql } from "@vercel/postgres";
 
 export async function PATCH(request: Request) {
   try {
-    // Parse the JSON body from the request
     const { projectId, userId, newTitle } = await request.json();
 
-    // Validate the required fields
     if (!projectId || !newTitle) {
       return new Response(
         JSON.stringify({ error: "Missing required fields: projectId or newTitle" }),
@@ -18,7 +16,6 @@ export async function PATCH(request: Request) {
       );
     }
 
-    // Update the project title in the sm_project table
     const response = await sql`
       UPDATE sm_project
       SET title = ${newTitle}
@@ -26,9 +23,8 @@ export async function PATCH(request: Request) {
       RETURNING *;
     `;
 
-    const updatedProject = response.rows[0]; // Get the updated project
+    const updatedProject = response.rows[0]; 
 
-    // If no project was found and updated, return a 404 error
     if (!updatedProject) {
       return new Response(
         JSON.stringify({ error: "Project not found" }),
@@ -41,7 +37,6 @@ export async function PATCH(request: Request) {
       );
     }
 
-    // Return the updated project
     return new Response(JSON.stringify({ project: updatedProject }), {
       status: 200,
       headers: {
@@ -58,10 +53,3 @@ export async function PATCH(request: Request) {
     });
   }
 }
-
-// // Export the handler so that it can be properly used by the framework
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };

@@ -1,4 +1,5 @@
 "use client";
+import dynamic from 'next/dynamic';
 import React, { useState, useContext, useEffect } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
 import {
@@ -10,10 +11,11 @@ import {
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import AppWrapper from "@/app/excalidraw/appWrapper";
+
+const AppWrapper = dynamic(() => import('@/components/excalidraw/appWrapper'), {
+  ssr: false, // Disable server-side rendering for this component
+});
 import { signOut } from "next-auth/react";
-import Logout from "./logout";
-import { Button } from "./ui/button";
 import { AppContext } from "./context";
 
 export function SidebarWrapper({ children, ...props }: any) {
@@ -79,7 +81,6 @@ export function SidebarWrapper({ children, ...props }: any) {
 
   const [open, setOpen] = useState(false);
   const [addingProj, setAddingProj] = useState(false);
-  // const [projects, setProjects] = useState([]);
 
   const handleAddProject = async () => {
     if (!session) {
@@ -91,14 +92,15 @@ export function SidebarWrapper({ children, ...props }: any) {
     const userId = session.userId;
     const title = "Project " + (projects.length + 1);
 
-    const newProject = { title: title, userId: userId, edit: false, id: '', mermaid: '', prompts: [] };
+    const newProject = { title: title, userId: userId, edit: false, id: '', mermaid: '', prompts: [], elements: [] };
     addProject(newProject);
 
     setAddingProj(false);
   };
 
   useEffect(() => {
-    if (session) {fetchProjectsByUserId(session.userId)
+    if (session) {
+      fetchProjectsByUserId(session.userId)
       console.log("CALLED")
     }
   }, [])
@@ -170,17 +172,11 @@ export function SidebarWrapper({ children, ...props }: any) {
                               className="rounded p-1 border-none bg-transparent focus:outline-none focus:ring-0"
                             />
                             <div>
-                              {/* <button
-                                className="ml-2 px-1 py-1 text-sm text-blue-500 hover:text-blue-700"
-                                onClick={() => setNewProjectName(idx, )}
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-check"><path d="M20 6 9 17l-5-5" /></svg>
-                              </button> */}
                               <button
                                 className=" px-1 py-1 text-sm text-red-500 hover:text-red-700"
                                 onClick={() => closeEditOption(project.id)}
                               >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                               </button>
                             </div>
                           </div>
@@ -196,19 +192,19 @@ export function SidebarWrapper({ children, ...props }: any) {
                                 className="ml-2 px-1 py-1 text-sm text-blue-500 hover:text-blue-700"
                                 onClick={() => handleOpenEditOption(project.id)}
                               >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-folder-pen"><path d="M2 11.5V5a2 2 0 0 1 2-2h3.9c.7 0 1.3.3 1.7.9l.8 1.2c.4.6 1 .9 1.7.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-9.5" /><path d="M11.378 13.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round" className="lucide lucide-folder-pen"><path d="M2 11.5V5a2 2 0 0 1 2-2h3.9c.7 0 1.3.3 1.7.9l.8 1.2c.4.6 1 .9 1.7.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-9.5" /><path d="M11.378 13.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /></svg>
                               </button>
-                              {!addingProj && 
-                              <button
-                                className=" px-1 py-1 text-sm "
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  deleteProject(project.id, session.userId)
-                                }}
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-delete"><path d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z" /><path d="m12 9 6 6" /><path d="m18 9-6 6" /></svg>
-                              </button>
-}
+                              {!addingProj &&
+                                <button
+                                  className=" px-1 py-1 text-sm "
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    deleteProject(project.id, session.userId)
+                                  }}
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round" className="lucide lucide-delete"><path d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z" /><path d="m12 9 6 6" /><path d="m18 9-6 6" /></svg>
+                                </button>
+                              }
                             </div>
                           </div>
                       ))
@@ -298,7 +294,7 @@ export const LogoIcon = () => {
   );
 };
 
-// Dummy dashboard component with content
+
 const Dashboard = () => {
   return (
     <section className="w-auto h-full flex flex-row">

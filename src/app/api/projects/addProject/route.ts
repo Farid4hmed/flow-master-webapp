@@ -3,10 +3,8 @@ import { sql } from "@vercel/postgres";
 
 export async function POST(request: Request) {
   try {
-    // Parse the JSON body from the request
     const { userId, title, prompts, mermaid } = await request.json();
 
-    // Validate the required fields
     if (!userId || !title) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
@@ -19,16 +17,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // Insert the new project into the sm_project table
     const response = await sql`
       INSERT INTO sm_project (user_id, title, prompts, mermaid)
       VALUES (${userId}, ${title}, ${JSON.stringify(prompts)}, ${mermaid})
       RETURNING *;
     `;
 
-    const newProject = response.rows[0]; // Get the newly inserted project
+    const newProject = response.rows[0]; 
 
-    // Return the newly added project
     return new Response(JSON.stringify({ project: newProject }), {
       status: 201,
       headers: {

@@ -1,4 +1,4 @@
-import NextAuth, { AuthOptions } from "next-auth";
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
 import { sql } from "@vercel/postgres";
@@ -39,7 +39,6 @@ const authOptions: AuthOptions = {
           if (passwordCorrect) {
             const projectsResp = await sql `SELECT * from sm_project where user_id = ${user.id}`;
             const projects = projectsResp.rows;
-            // Return user information that will be included in the JWT
             return { id: user.id, userId: user.id, email: user.email, projects: projects };
           }
 
@@ -53,16 +52,14 @@ const authOptions: AuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }: any) {
-      // If a user is provided (after successful login), include userId and email in the token
       if (user) {
-        token.userId = user.userId; // Set the userId from user object
-        token.email = user.email; // Set the email from user object
+        token.userId = user.userId; 
+        token.email = user.email; 
         token.projects = user.projects
       }
       return token;
     },
     async session({ session, token }: any) {
-      // Include userId and email in the session object
       if (token) {
         session.userId = token.userId;
         session.user.email = token.email;

@@ -32,24 +32,6 @@ export async function POST(request) {
 }
 
 
-// async function sendEmail(req, res) {
-//     try {
-//         const html = getHtml(req.body.otp)
-
-//         await sendgrid.send({
-//             to: `${req.body.recipient}`,
-//             from: `${req.body.sender}`,
-//             subject: `${req.body.subject}`,
-//             html: html,
-//         })
-//     } catch (error) {
-//         return res.status(error.statusCode || 500).json({ error: error.message });
-//     }
-
-//     return res.status(200).json({ error: "" })
-// }
-
-// export default sendEmail;
 
 
 async function getHtml(otp) {

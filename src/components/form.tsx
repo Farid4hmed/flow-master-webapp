@@ -19,8 +19,9 @@ const Form: React.FC<FormData> = ({ onSubmit, disabled, query, setQuery }) => {
 
   return (
     <form onSubmit={handleSubmit} className="w-full flex justify-center items-center sm:px-10 px-5 sm:mb-4 mb-1">
-      <div className="relative flex items-center rounded-full border-gray-200 sm:py-0 py-1 w-full">
+      <div id="div" className="relative flex items-center rounded-full border-gray-200 sm:py-0 py-1 w-full">
         <input
+          id="input"
           type="text"
           value={query}
           placeholder="Express that what you want to design..."
@@ -30,6 +31,7 @@ const Form: React.FC<FormData> = ({ onSubmit, disabled, query, setQuery }) => {
           disabled={disabled}
         />
         <button
+          id="button"
           type="submit"
           className="absolute right-0 mr-3 focus:outline-none"
         >
