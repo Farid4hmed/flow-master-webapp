@@ -98,7 +98,9 @@ export function SidebarWrapper({ children, ...props }: any) {
   };
 
   useEffect(() => {
-    if (session) fetchProjectsByUserId(session.userId)
+    if (session) {fetchProjectsByUserId(session.userId)
+      console.log("CALLED")
+    }
   }, [])
 
 

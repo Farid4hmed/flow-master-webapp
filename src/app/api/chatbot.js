@@ -1,27 +1,13 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY; 
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-function storeInLocalStorage(userId, reqId, query, response) {
-    const key = `${userId}_${reqId}`;
-    let conversationHistory = JSON.parse(localStorage.getItem(key)) || [];
-    conversationHistory.push({ user: query, bot: response });
-    localStorage.setItem(key, JSON.stringify(conversationHistory));
-}
 
-function getConversationHistory(userId, reqId) {
-    const key = `${userId}_${reqId}`;
-    return JSON.parse(localStorage.getItem(key)) || [];
-}
-
-function clearConversationHistory(userId, reqId) {
-    const key = `${userId}_${reqId}`;
-    localStorage.removeItem(key);
-}
 
 async function callGeminiAPI(prompt) {
     try {
@@ -36,22 +22,18 @@ async function callGeminiAPI(prompt) {
     }
 }
 
-export async function getChatBotResponse(userId, reqId, query) {
-    const conversationHistory = getConversationHistory(userId, reqId).map(entry => `User: ${entry.user}\nBot: ${entry.bot}`).join('\n');
+export async function getChatBotResponse(prompts, query) {
+    const conversationHistory = prompts.map(entry => `User: ${entry.user}\nBot: ${entry.bot}`).join('\n');
     const prompt = `Respond to users latest message, keep the response short, Send response in HTML (don't add html at the front of the text): ${conversationHistory}\nUser: ${query}\nBot:`;
 
     const botResponse = await callGeminiAPI(prompt);
 
-    if (botResponse) {
-        storeInLocalStorage(userId, reqId, query, botResponse);
-    }
-
     return botResponse;
 }
 
-export async function getMermaidCode(userId, reqId) {
+export async function getMermaidCode(prompts) {
     console.log("getMermaidCode")
-    const conversationHistory = getConversationHistory(userId, reqId);
+    const conversationHistory = prompts
 
     if (conversationHistory.length === 0) {
         return 'No conversation history found.';
