@@ -1,15 +1,15 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import useLocalStorageState from 'use-local-storage-state'; // Import the new library
+import React, { useEffect } from 'react';
+import useLocalStorageState from 'use-local-storage-state'; 
 import mermaidToExcalidrawElements from '@/app/excalidraw/mermaidToExcali';
-// Define the structure of a prompt
+
 interface Prompt {
   id: string;
   text: string;
   response: string;
 }
 
-// Define the structure of a project
+
 interface Project {
   id: string;
   title: string;
@@ -20,7 +20,6 @@ interface Project {
   elements: any;
 }
 
-// Define the structure of the current project
 interface CurrentProject {
   title: string;
   userId: number;
@@ -30,7 +29,6 @@ interface CurrentProject {
   elements: any;
 }
 
-// Define the context with prompts, projects, current project, and their functions
 export const AppContext = React.createContext<{
   prompts: Prompt[];
   projects: Project[];
@@ -64,29 +62,16 @@ export const AppContext = React.createContext<{
 });
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Use useLocalStorageState for local storage management
+
   const [prompts, setPrompts] = useLocalStorageState<Prompt[]>('prompts', { defaultValue: [] });
   const [projects, setProjects] = useLocalStorageState<Project[]>('projects', { defaultValue: [] });
   const [currentProject, setCurrentProject] = useLocalStorageState<CurrentProject | null>('currentProject', { defaultValue: null });
-  // Synchronize prompts with currentProject.prompts whenever currentProject changes
 
-
-  // useEffect(() => {
-  //   if (currentProject && currentProject.mermaid != "" && currentProject.elements && currentProject.elements.length === 0) {
-  //     let ele = convertMermaidToElements(currentProject.mermaid);
-  //     setCurrentProject((prevProj: any) =>
-  //       prevProj ? { ...prevProj, elements: ele } : null
-  //     );
-  //   }
-
-  // }, [currentProject?.id]);
-
-  // Use effect to update projects whenever the prompts state changes
   useEffect(() => {
     setProjects((prevProjects: any) =>
       prevProjects.map((project: any) =>
         project.id === currentProject?.id
-          ? { ...project, prompts: prompts } // Update prompts for the matching project
+          ? { ...project, prompts: prompts } 
           : project
       )
     );
@@ -97,10 +82,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const changeChart = async (mermaid: string, id: string) => {
     if (mermaid !== "") {
-      // Convert Mermaid string to elements
+
       let ele = await convertMermaidToElements(mermaid);
   
-      // Update the state with the new mermaid data and elements
       setProjects((prevProjects) =>
         prevProjects.map((project) =>
           project.id === id
@@ -113,7 +97,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         prevProj ? { ...prevProj, mermaid: mermaid, elements: ele } : null
       );
   
-      // Call the API to save the mermaid data
       try {
         const response = await fetch('/api/projects/saveMermaid', {
           method: 'POST',
@@ -147,12 +130,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return [];
     }
   };
-  // Function to add a new prompt
+
   const addPrompt = (prompt: Prompt) => {
     setPrompts((prevPrompts) => [...prevPrompts, prompt]);
   };
 
-  // Function to update an existing prompt
+
   const updatePrompt = (id: string, updatedPrompt: Partial<Prompt>) => {
     setPrompts((prevPrompts) => {
       const updatedPrompts = prevPrompts.map((prompt) =>
@@ -163,7 +146,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  // Function to save the updated prompts to the database
+
   const saveUpdatedPrompts = async (latestPrompts: Prompt[]) => {
     try {
       if (currentProject) {
@@ -193,24 +176,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  // Function to remove a prompt
+
   const removePrompt = (id: string) => {
     setPrompts((prevPrompts) => prevPrompts.filter((prompt) => prompt.id !== id));
   };
 
-  // Function to add a new project
+
   const addProject = async (project: Project) => {
     try {
-      //   const tempProject: Project = {
-      //     id: project.title,
-      //     userId: project.userId,
-      //     title: project.title,
-      //     prompts: project.prompts,
-      //     mermaid: project.mermaid,
-      //     edit: false,
-      //   };
-      //   setProjects((prevProjects) => [tempProject, ...prevProjects]);
-
       const response = await fetch('/api/projects/addProject', {
         method: 'POST',
         headers: {
@@ -229,7 +202,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const newProject: Project = data.project;
         changeCurrentProject(newProject);
         setProjects((prevProjects) => [newProject, ...prevProjects]);
-        // updateProjectId(newProject);
       } else {
         console.error('Failed to add project:', response.statusText);
       }
@@ -238,13 +210,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const updateProjectId = (project: Project) => {
-    setProjects((prevProjects) =>
-      prevProjects.map((item) =>
-        item.title === project.title ? { ...item, id: project.id } : item
-      )
-    );
-  };
 
   const handleOpenEditOption = (projectId: string) => {
     setProjects((prevProjects) =>
@@ -345,13 +310,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const fetchProjectsByUserId = async (userId: number) => {
     try {
-      // Make a POST request with the userId in the request body
       const response = await fetch('/api/projects/getAllProjects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId }), // Send userId in the request body
+        body: JSON.stringify({ userId }),
       });
   
       if (response.ok) {

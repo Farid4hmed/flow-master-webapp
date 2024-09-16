@@ -2,10 +2,8 @@ import { sql } from "@vercel/postgres";
 
 export async function DELETE(request: Request) {
   try {
-    // Parse the JSON body from the request
     const { projectId, userId } = await request.json();
 
-    // Validate the required fields
     if (!projectId || !userId) {
       return new Response(
         JSON.stringify({ error: "Missing required fields: projectId or userId" }),
@@ -18,16 +16,14 @@ export async function DELETE(request: Request) {
       );
     }
 
-    // Delete the project from the sm_project table, ensuring it belongs to the specified user
     const response = await sql`
       DELETE FROM sm_project
       WHERE id = ${projectId} AND user_id = ${userId}
       RETURNING *;
     `;
 
-    const deletedProject = response.rows[0]; // Get the deleted project
+    const deletedProject = response.rows[0]; 
 
-    // If no project was found and deleted, return a 404 error
     if (!deletedProject) {
       return new Response(
         JSON.stringify({ error: "Project not found or user does not have permission" }),

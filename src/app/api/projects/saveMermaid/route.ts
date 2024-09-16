@@ -1,12 +1,9 @@
-// app/api/updateMermaid/route.ts
 import { sql } from "@vercel/postgres";
 
 export async function POST(request: Request) {
   try {
-    // Parse the JSON body from the request
     const { projectId, mermaid } = await request.json();
 
-    // Validate the required fields
     if (!projectId || !mermaid) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
@@ -19,7 +16,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Update the project with the new mermaid string
     const updateResponse = await sql`
       UPDATE sm_project
       SET mermaid = ${mermaid}
@@ -27,9 +23,8 @@ export async function POST(request: Request) {
       RETURNING *;
     `;
 
-    const updatedProject = updateResponse.rows[0]; // Get the updated project
+    const updatedProject = updateResponse.rows[0]; 
 
-    // Return the updated project
     return new Response(JSON.stringify({ project: updatedProject }), {
       status: 200,
       headers: {

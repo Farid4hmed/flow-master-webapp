@@ -40,11 +40,3 @@ export async function POST(request: Request) {
   });
 }
 
-
-
-
-function validateEmail(email: string) {
-  // Regular expression to match the email format
-  const regex = /^\d+\.\w+@gmail\.com$/;
-  return regex.test(email);
-}

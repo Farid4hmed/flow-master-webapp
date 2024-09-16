@@ -1,12 +1,9 @@
-// app/api/projects/getProjects.ts
 import { sql } from '@vercel/postgres';
 
 export async function POST(request: Request) {
   try {
-    // Parse the request body to get the userId
     const { userId } = await request.json();
 
-    // Validate that the userId is provided
     if (!userId) {
       return new Response(JSON.stringify({ error: 'Missing userId' }), {
         status: 400,
@@ -16,12 +13,10 @@ export async function POST(request: Request) {
       });
     }
 
-    // Query the sm_project table for all projects associated with the userId
     const response = await sql`
       SELECT * FROM sm_project WHERE user_id = ${userId}
     `;
 
-    // Return the projects associated with the userId, or an empty array if none are found
     return new Response(JSON.stringify({ projects: response.rows }), {
       status: 200,
       headers: {

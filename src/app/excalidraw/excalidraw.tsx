@@ -1,44 +1,19 @@
 'use client';
-import React, { useState, useLayoutEffect, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Excalidraw } from '@excalidraw/excalidraw';
-import mermaidToExcalidrawElements from './mermaidToExcali';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Chatbox from '@/components/Chatbox';
 import { AppContext } from '@/components/context';
 
-export default function ExcalidrawWrapper(props: any) {
-  const { projects, changeChart, currentProject } = useContext(AppContext)
+export default function ExcalidrawWrapper() {
+  const { changeChart, currentProject } = useContext(AppContext)
   const [openChat, setOpenChat] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  // useEffect(() => {
-  //   const convertMermaidToElements = async (code: any) => {
-  //     try {
-  //       const result: any = await mermaidToExcalidrawElements(code);
-  //       setElements(result);
-  //     } catch (error) {
-  //       console.error("Error converting Mermaid to Excalidraw elements:", error);
-  //       setElements([]);
-  //     }
-  //   };
-
-  //   // if (chart) {
-  //   convertMermaidToElements(chart);
-  //   // } else {
-  //   //   // Handle cases where the props.chart is not available
-  //   //   convertMermaidToElements(`graph TD
-  //   //     A["Couldn't Generate Diagram, Please Try Regenerating"]
-  //   //   `);
-  //   // }
-
-  //   props.changeChart(chart, props.project.id);
-
-  // }, [chart]); // Dependency on props.chart
 
 
   return (
     <>
-      {/* {projects.map((project) => ( */}
         <div className="relative h-screen max-h-[95vh] sm:min-h-screen w-screen sm:max-w-[95vw] md:max-w-[95vw] lg:max-w-[95vw] xl:max-w-[95vw] 2xl:max-w-[97vw] 3xl:max-w-[98vw]">
 
             <Excalidraw
@@ -66,7 +41,6 @@ export default function ExcalidrawWrapper(props: any) {
             </div>
           )}
         </div>
-      {/* ))} */}
     </>
   );
 }

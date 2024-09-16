@@ -12,8 +12,6 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import AppWrapper from "@/app/excalidraw/appWrapper";
 import { signOut } from "next-auth/react";
-import Logout from "./logout";
-import { Button } from "./ui/button";
 import { AppContext } from "./context";
 
 export function SidebarWrapper({ children, ...props }: any) {
@@ -79,7 +77,6 @@ export function SidebarWrapper({ children, ...props }: any) {
 
   const [open, setOpen] = useState(false);
   const [addingProj, setAddingProj] = useState(false);
-  // const [projects, setProjects] = useState([]);
 
   const handleAddProject = async () => {
     if (!session) {
@@ -170,12 +167,6 @@ export function SidebarWrapper({ children, ...props }: any) {
                               className="rounded p-1 border-none bg-transparent focus:outline-none focus:ring-0"
                             />
                             <div>
-                              {/* <button
-                                className="ml-2 px-1 py-1 text-sm text-blue-500 hover:text-blue-700"
-                                onClick={() => setNewProjectName(idx, )}
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-check"><path d="M20 6 9 17l-5-5" /></svg>
-                              </button> */}
                               <button
                                 className=" px-1 py-1 text-sm text-red-500 hover:text-red-700"
                                 onClick={() => closeEditOption(project.id)}
@@ -298,7 +289,7 @@ export const LogoIcon = () => {
   );
 };
 
-// Dummy dashboard component with content
+
 const Dashboard = () => {
   return (
     <section className="w-auto h-full flex flex-row">
