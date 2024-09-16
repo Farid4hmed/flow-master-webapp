@@ -83,8 +83,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Use effect to update projects whenever the prompts state changes
   useEffect(() => {
-    setProjects((prevProjects) =>
-      prevProjects.map((project) =>
+    setProjects((prevProjects: any) =>
+      prevProjects.map((project: any) =>
         project.id === currentProject?.id
           ? { ...project, prompts: prompts } // Update prompts for the matching project
           : project
