@@ -7,7 +7,7 @@ import { Bot, CircleArrowRight } from 'lucide-react';
 import { AppContext } from "@/components/context";
 
 export default function AppWrapper() {
-    const {chart, changeChart } = useContext(AppContext);
+    const { changeChart, projects } = useContext(AppContext);
 
     // useEffect(() => {
     //     localStorage.clear();
@@ -20,8 +20,8 @@ export default function AppWrapper() {
 
             {/* ExcalidrawWrapper to take the remaining width */}
             <div className="flex-1 h-full">
+                    <ExcalidrawWrapper  />
 
-                <ExcalidrawWrapper chart={chart} setChart={changeChart} />
             </div>
         </section>
     );

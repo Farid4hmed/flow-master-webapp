@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import useLocalStorageState from 'use-local-storage-state'; // Import the new library
-
+import mermaidToExcalidrawElements from '@/app/excalidraw/mermaidToExcali';
 // Define the structure of a prompt
 interface Prompt {
   id: string;
@@ -17,6 +17,7 @@ interface Project {
   edit: boolean;
   prompts: Prompt[];
   mermaid: string;
+  elements: [];
 }
 
 // Define the structure of the current project
@@ -26,6 +27,7 @@ interface CurrentProject {
   id: any;
   prompts: Prompt[];
   mermaid: string;
+  elements: [];
 }
 
 // Define the context with prompts, projects, current project, and their functions
@@ -33,8 +35,7 @@ export const AppContext = React.createContext<{
   prompts: Prompt[];
   projects: Project[];
   currentProject: CurrentProject | null;
-  chart: string;
-  changeChart: (mermaid: string) => void;
+  changeChart: (mermaid: string, id: string) => void;
   addPrompt: (prompt: Prompt) => void;
   updatePrompt: (id: string, updatedPrompt: Partial<Prompt>) => void;
   removePrompt: (id: string) => void;
@@ -49,18 +50,17 @@ export const AppContext = React.createContext<{
   prompts: [],
   projects: [],
   currentProject: null,
-  chart: '',
-  changeChart: () => {},
-  addPrompt: () => {},
-  updatePrompt: () => {},
-  removePrompt: () => {},
-  addProject: () => {},
-  deleteProject: () => {},
-  closeEditOption: () => {},
-  handleOpenEditOption: () => {},
-  handleSaveProjectTitle: () => {},
-  changeCurrentProject: () => {},
-  fetchProjectsByUserId: () => {},
+  changeChart: () => { },
+  addPrompt: () => { },
+  updatePrompt: () => { },
+  removePrompt: () => { },
+  addProject: () => { },
+  deleteProject: () => { },
+  closeEditOption: () => { },
+  handleOpenEditOption: () => { },
+  handleSaveProjectTitle: () => { },
+  changeCurrentProject: () => { },
+  fetchProjectsByUserId: () => { },
 });
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -68,7 +68,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [prompts, setPrompts] = useLocalStorageState<Prompt[]>('prompts', { defaultValue: [] });
   const [projects, setProjects] = useLocalStorageState<Project[]>('projects', { defaultValue: [] });
   const [currentProject, setCurrentProject] = useLocalStorageState<CurrentProject | null>('currentProject', { defaultValue: null });
-  const [chart, setChart ] = useState(``);
   // Synchronize prompts with currentProject.prompts whenever currentProject changes
 
 
@@ -92,9 +91,33 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [prompts]);
 
 
-  const changeChart = (mermaid: string) => {
-    setChart(mermaid);
-  }
+  const changeChart = async (mermaid: string, id: string) => {
+    if (mermaid !== "") {
+      let ele = await convertMermaidToElements(mermaid);
+  
+      setProjects((prevProjects) =>
+        prevProjects.map((project) =>
+          project.id === id
+            ? { ...project, mermaid: mermaid, elements: ele }
+            : project
+        )
+      );
+  
+      setCurrentProject((prevProj) => 
+        prevProj ? { ...prevProj, mermaid: mermaid, elements: ele } : null
+      );
+    }
+  };
+
+  const convertMermaidToElements = async (code: any) => {
+    try {
+      const result: any = await mermaidToExcalidrawElements(code);
+      return result;
+    } catch (error) {
+      console.error("Error converting Mermaid to Excalidraw elements:", error);
+      return [];
+    }
+  };
   // Function to add a new prompt
   const addPrompt = (prompt: Prompt) => {
     setPrompts((prevPrompts) => [...prevPrompts, prompt]);
@@ -149,15 +172,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Function to add a new project
   const addProject = async (project: Project) => {
     try {
-    //   const tempProject: Project = {
-    //     id: project.title,
-    //     userId: project.userId,
-    //     title: project.title,
-    //     prompts: project.prompts,
-    //     mermaid: project.mermaid,
-    //     edit: false,
-    //   };
-    //   setProjects((prevProjects) => [tempProject, ...prevProjects]);
+      //   const tempProject: Project = {
+      //     id: project.title,
+      //     userId: project.userId,
+      //     title: project.title,
+      //     prompts: project.prompts,
+      //     mermaid: project.mermaid,
+      //     edit: false,
+      //   };
+      //   setProjects((prevProjects) => [tempProject, ...prevProjects]);
 
       const response = await fetch('/api/projects/addProject', {
         method: 'POST',
@@ -242,9 +265,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const deleteProject = async (projectId: string, userId: string) => {
     setProjects((prevProjects) =>
-        prevProjects.filter((project) => project.id !== projectId)
-    
-)   
+      prevProjects.filter((project) => project.id !== projectId)
+
+    )
     try {
       const response = await fetch('/api/projects/deleteProject', {
         method: 'DELETE',
@@ -291,7 +314,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           'Content-Type': 'application/json',
         },
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         setProjects(data.projects);
@@ -309,7 +332,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <AppContext.Provider
       value={{
-        chart,
         changeChart,
         prompts,
         projects,

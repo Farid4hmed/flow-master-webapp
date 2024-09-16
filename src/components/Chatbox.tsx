@@ -161,7 +161,7 @@ const Chatbox: any = (props: any) => {
 
 
     // mermaidCode = mermaidCode.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\'/g, "'");
-    props.setChart(mermaidCode);
+    props.setChart(mermaidCode, props.project.id);
     props.setIsLoading(false);
     // setPrompts([]);
     // setIsFetchingMermaidCode(false);
@@ -180,7 +180,6 @@ const Chatbox: any = (props: any) => {
     
   }, [prompts]);
 
-  console.log("ISLOADING ->  ", props.isLoading)
   return (
     <div className="flex justify-center items-center h-full w-full rounded-xl shadow-xl m-0">
       {/* chatbot */}
