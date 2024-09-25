@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 
 
 const Chatbox: any = (props: any) => {
-  const { prompts, addPrompt, updatePrompt } = useContext(AppContext);
+  const { prompts, addPrompt, updatePrompt, clearChat, currentProject, projects } = useContext(AppContext);
 
 
   const [submitted, setSubmitted] = useState(false);
@@ -32,25 +32,29 @@ const Chatbox: any = (props: any) => {
     setSubmitted(true);
     setIsFetchingResponse(true);
 
-    const chatBotResp = await getChatBotResponse(prompts, query);
+    const chatBotResp = await getChatBotResponse(query, currentProject?.user_id, currentProject?.id);
 
-    updatePrompt(textId, { response: chatBotResp })
+    updatePrompt(textId, { response: chatBotResp?.model_output })
+
+    if (chatBotResp?.wantsToDraw) getMermaidCodeResponse();
 
     setIsFetchingResponse(false);
-  };
+  }
 
   const getMermaidCodeResponse = async () => {
     props.setIsLoading(true);
-
-    let response = await getMermaidCode(prompts);
+    console.log(currentProject)
+    let response = await getMermaidCode(currentProject?.user_id, currentProject?.id);
 
     let mermaidCode = response;
     mermaidCode = cleanMermaidInput(mermaidCode);
 
+    console.log("FINAL MERMAID", mermaidCode)
 
     props.setChart(mermaidCode, props.project?.id || '0');
     props.setIsLoading(false);
   }
+
   function cleanMermaidInput(input: any) {
     return input.replace(/^```mermaid\s*/, '').replace(/```$/, '').trim();
   }
@@ -62,12 +66,19 @@ const Chatbox: any = (props: any) => {
       });
     }
     setSubmitted(prompts.length > 0)
-    
+
   }, [prompts]);
 
   return (
     <div className="flex justify-center items-center h-full w-full rounded-xl shadow-xl m-0">
       <div className="flex flex-col items-start sm:px-10 px-4 text-left justify-start sm:pt-8 pt-4 2xl:px-10 h-full w-full bg-gray-200 relative no-scrollbar rounded-2xl rounded-tl-4xl">
+        {prompts.length > 0 && (
+          <div className="absolute top-3 md:top-4 left-9 text-gray-500">
+            <button className="bg-none text-xs underline" onClick={clearChat}>
+              Clear Chat
+            </button>
+          </div>
+        )}
         <div ref={chatContainerRef} className="w-full pt-4 no-scrollbar" style={{ maxHeight: 'calc(70%)', transition: 'all 0.5s ease', overflowY: submitted ? "scroll" : "hidden", scrollbarWidth: "none" }}>
           {submitted && (
             <section className="flex flex-col space-y-4">
@@ -107,6 +118,8 @@ const Chatbox: any = (props: any) => {
               }
             </div>)
           }
+
+
           {!submitted && query.length == 0 && prompts.length == 0 && (
             <div className="w-full flex justify-center items-center pt-2">
               <div className="grid grid-cols-2 sm:mt-5 mt-1 md:-mt-4 sm:mb-5 mb-2 gap-4 w-3/4">
@@ -136,8 +149,8 @@ const Chatbox: any = (props: any) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 
 

@@ -97,12 +97,30 @@ export default function LoginForm() {
     })
 
     async function onSignUpSubmit(values: z.infer<typeof signUpFormSchema>) {
-        await sendVerificationEmail(values.email)
+        await sendVerificationEmail(values.email);
+
+        // Get the current date and time
+        const now = new Date();
+
+        // Format the date and time
+        const options: Intl.DateTimeFormatOptions = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true
+        };
+
+        const formattedDate = now.toLocaleDateString("en-US", options);
+
         toast({
             title: "An OTP has been sent to your email.",
-            description: "Friday, February 10, 2023 at 5:57 PM"
-        })
-        setOtpActive(true)
+            description: formattedDate
+        });
+
+        setOtpActive(true);
     }
 
     async function onSubmit(values: z.infer<typeof formSchema>) {

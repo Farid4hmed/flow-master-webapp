@@ -1,7 +1,9 @@
 'use client';
+import { getProjectTitle } from '@/app/api/chatbot';
 import React, { useEffect } from 'react';
 import useLocalStorageState from 'use-local-storage-state';
 // import mermaidToExcalidrawElements from '@/app/excalidraw/mermaidToExcali';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Prompt {
   id: string;
@@ -13,7 +15,7 @@ interface Prompt {
 interface Project {
   id: string;
   title: string;
-  userId: number;
+  user_id: number;
   edit: boolean;
   prompts: Prompt[];
   mermaid: string;
@@ -22,11 +24,12 @@ interface Project {
 
 interface CurrentProject {
   title: string;
-  userId: number;
+  // userId: number;
   id: any;
   prompts: Prompt[];
   mermaid: string;
   elements: any;
+  user_id: number;
 }
 
 export const AppContext = React.createContext<{
@@ -44,6 +47,7 @@ export const AppContext = React.createContext<{
   handleSaveProjectTitle: (projectId: string, userId: string, newTitle: string) => void;
   changeCurrentProject: (project: CurrentProject) => void;
   fetchProjectsByUserId: (userId: number) => void;
+  clearChat: () => void;
 }>({
   prompts: [],
   projects: [],
@@ -59,6 +63,7 @@ export const AppContext = React.createContext<{
   handleSaveProjectTitle: () => { },
   changeCurrentProject: () => { },
   fetchProjectsByUserId: () => { },
+  clearChat: () => {}
 });
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -81,6 +86,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
 
   }, [prompts]);
+
+  const clearChat = () => {
+    setPrompts([]);
+  };
 
 
   const changeChart = async (mermaid: string, id: string) => {
@@ -159,14 +168,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
 
-  const updatePrompt = (id: string, updatedPrompt: Partial<Prompt>) => {
+  const updatePrompt = async (id: string, updatedPrompt: Partial<Prompt>) => {
+    let updatedPrompts: Prompt[] = [];
+
     setPrompts((prevPrompts) => {
-      const updatedPrompts = prevPrompts.map((prompt) =>
+      updatedPrompts = prevPrompts.map((prompt) =>
         prompt.id === id ? { ...prompt, ...updatedPrompt } : prompt
       );
+
       saveUpdatedPrompts(updatedPrompts);
+
       return updatedPrompts;
     });
+
+    if (updatedPrompts.length === 3 && currentProject) {
+      const myUUID = uuidv4();
+      console.log(updatedPrompts);
+
+      const newProjectTitle = await getProjectTitle(updatedPrompts, currentProject.id, myUUID);
+      console.log("NEWPROJECTTITLE", newProjectTitle)
+      if (newProjectTitle) {
+
+        setProjects((prevProjects: any) =>
+          prevProjects.map((project: any) =>
+            project.id === currentProject?.id
+              ? { ...project, title: newProjectTitle }
+              : project
+          )
+        );
+      }
+    }
   };
 
 
@@ -190,7 +221,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
         const result = await response.json();
         const updatedProject = result.project;
-        console.log('Updated project:', updatedProject);
       } else {
         console.log('No Project Selected');
       }
@@ -213,7 +243,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: project.userId,
+          userId: project.user_id,
           title: project.title,
           prompts: project.prompts,
           mermaid: project.mermaid,
@@ -222,7 +252,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       if (response.ok) {
         const data = await response.json();
-        const newProject: Project = data.project;
+        const newProject: any = data.project;
         changeCurrentProject(newProject);
         setProjects((prevProjects) => [newProject, ...prevProjects]);
       } else {
@@ -359,6 +389,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     <AppContext.Provider
       value={{
         changeChart,
+        clearChat,
         prompts,
         projects,
         currentProject,

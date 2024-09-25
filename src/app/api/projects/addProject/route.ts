@@ -4,7 +4,6 @@ import { sql } from "@vercel/postgres";
 export async function POST(request: Request) {
   try {
     const { userId, title, prompts, mermaid } = await request.json();
-
     if (!userId || !title) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),

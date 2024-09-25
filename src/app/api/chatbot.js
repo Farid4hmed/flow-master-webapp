@@ -1,7 +1,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
-
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY; 
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
@@ -13,7 +14,7 @@ async function callGeminiAPI(prompt) {
     try {
         const result = await model.generateContent(prompt);
         const response = await result.response;
-        const text = await response.text(); 
+        const text = await response.text();
 
         return text
     } catch (error) {
@@ -22,32 +23,81 @@ async function callGeminiAPI(prompt) {
     }
 }
 
-export async function getChatBotResponse(prompts, query) {
-    const conversationHistory = prompts.map(entry => `User: ${entry.user}\nBot: ${entry.bot}`).join('\n');
-    const prompt = `Respond to users latest message, keep the response short, Send response in HTML (don't add html at the front of the text): ${conversationHistory}\nUser: ${query}\nBot:`;
+export async function getChatBotResponse(query, userId, projectId) {
+    // const conversationHistory = prompts.map(entry => `User: ${entry.user}\nBot: ${entry.bot}`).join('\n');
+    // const prompt = `Respond to users latest message, keep the response short, Send response in HTML (don't add html at the front of the text): ${conversationHistory}\nUser: ${query}\nBot:`;
+    // const myUUID = uuidv4();
 
-    const botResponse = await callGeminiAPI(prompt);
-
-    return botResponse;
-}
-
-export async function getMermaidCode(prompts) {
-    console.log("getMermaidCode")
-    const conversationHistory = prompts
-
-    if (conversationHistory.length === 0) {
-        return 'No conversation history found.';
+    const payload = {
+        userID: `${userId}`,
+        requestID: `${projectId}`,
+        user_input: query
     }
 
-    const summaryPrompt = `Summarize the following conversation: ${JSON.stringify(conversationHistory)}`;
-    const summary = await callGeminiAPI(summaryPrompt);
 
-    const mermaidPrompt = `
-    Given is a summary of a conversation betweeen user and a bot, your task is to generate a mermaid code version 11.0.2 according what user wants to build ( The use of square brackets ([" "]) around the subgraph names allows for spaces in the names.), only send as response the mermaid code with no other explanation, it should be a working code. try the keep the diagram very short and simple and always keep the syntax right, don't use paranthesis. Here is the summary to convert: ${summary}`;
-    
-    const mermaidCode = await callGeminiAPI(mermaidPrompt);
+    const botResponse = await axios.post(`http://18.139.111.227/chat-llm`, payload, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
 
-    const validatedMermaidCode = await callGeminiAPI(`Fix Syntax Error on the Mermaid code version 11.0.2, only send the mermaid code as response: ${mermaidCode}`);
+    console.log("RESPONSE", botResponse?.data)
+    if(botResponse.data)return botResponse?.data;
+}
 
-    return validatedMermaidCode;
+
+
+export async function getMermaidCode(userId, projectId) {
+    const payload = {
+        userID: `${userId}`,
+        requestID: `${projectId}`,
+    }
+
+    try {
+        const botResponse = await axios.post(`http://18.139.111.227/generate-mermaid`, payload, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log("RESPONSE", botResponse?.data);
+        
+        let resultMermaid;
+        if (botResponse.data) {
+            resultMermaid = botResponse.data?.mermaid_code;
+        }
+        console.log("BEFORE", resultMermaid)
+        const validatedMermaidCode = await callGeminiAPI(`Make this Mermaid code working for version 11.2.1, only send the mermaid code as response: ${resultMermaid}`);
+        console.log("AFTER", validatedMermaidCode)
+        return validatedMermaidCode;
+
+    } catch (error) {
+        console.error("Error fetching mermaid code:", error);
+        return null; // Optionally, return null or handle the error as needed
+    }
+}
+
+export async function getProjectTitle(prompts, userId, requestId) {
+    try {
+        const payload = {
+            userID: `${userId}`,  // Ensure this is a string
+            requestID: requestId,  // Ensure this is also a string
+            user_input: prompts  // This should be an array of objects as you defined
+        };
+
+        const result = await axios.post('http://18.139.111.227/generate-summary-title', payload, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (result.data) {
+            return result.data?.project_title;
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error generating project title:', error.message);
+        throw new Error('Failed to generate project title. Please try again.');
+    }
 }
