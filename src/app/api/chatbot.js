@@ -85,7 +85,7 @@ export async function getProjectTitle(prompts, userId, requestId) {
             user_input: prompts  // This should be an array of objects as you defined
         };
 
-        const result = await axios.post('http://18.139.111.227/generate-summary-title', payload, {
+        const result = await axios.post('https://fab-team-services.xyz/generate-summary-title', payload, {
             headers: {
                 'Content-Type': 'application/json'
             }

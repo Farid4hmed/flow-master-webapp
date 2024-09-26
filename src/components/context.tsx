@@ -186,17 +186,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       console.log(updatedPrompts);
 
       const newProjectTitle = await getProjectTitle(updatedPrompts, currentProject.id, myUUID);
-      console.log("NEWPROJECTTITLE", newProjectTitle)
-      if (newProjectTitle) {
 
-        setProjects((prevProjects: any) =>
-          prevProjects.map((project: any) =>
-            project.id === currentProject?.id
-              ? { ...project, title: newProjectTitle }
-              : project
-          )
-        );
-      }
+      handleSaveProjectTitle(currentProject.id, currentProject.user_id, newProjectTitle)
+      // console.log("NEWPROJECTTITLE", newProjectTitle)
+      // if (newProjectTitle) {
+
+      //   setProjects((prevProjects: any) =>
+      //     prevProjects.map((project: any) =>
+      //       project.id === currentProject?.id
+      //         ? { ...project, title: newProjectTitle }
+      //         : project
+      //     )
+      //   );
+      // }
     }
   };
 
