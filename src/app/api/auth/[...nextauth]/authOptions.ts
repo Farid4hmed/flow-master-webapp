@@ -1,7 +1,5 @@
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { compare } from "bcrypt";
-import { sql } from "@vercel/postgres";
 
 const authOptions: AuthOptions = {
   session: {
@@ -19,32 +17,36 @@ const authOptions: AuthOptions = {
       },
       async authorize(credentials, req) {
         try {
-          console.log("Connecting to database...");
-          const response = await sql`
-            SELECT * FROM sm_user WHERE email = ${credentials?.email}
-          `;
-          const user = response.rows[0];
+          // Send POST request to the sign-in API
+          const apiResponse = await fetch('https://fab-team-services.xyz:8089/signIn', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: credentials?.email,
+              password: credentials?.password,
+            }),
+          });
+          
+          const data = await apiResponse.json();
+          console.log("API RESPONSE", data)
+          if (apiResponse.status === 200) {
+            // Return an object that conforms to the extended User type
+            const user: any = {
+              email: credentials?.email || "",
+              userId: `${data.body.user_id}` || "0", // Adjust based on actual response
+              projects: data.body.projects || [], // Adjust based on actual response
+            };
 
-          if (!user) {
-            console.log("User not found");
-            return null;
+            return user; // The returned object now matches the expected User type
           }
-          console.log("User found:", user.id);
 
-          const passwordCorrect = await compare(
-            credentials?.password || "",
-            user.password
-          );
-
-          if (passwordCorrect) {
-            const projectsResp = await sql `SELECT * from sm_project where user_id = ${user.id}`;
-            const projects = projectsResp.rows;
-            return { id: user.id, userId: user.id, email: user.email, projects: projects };
-          }
-
+          // If sign-in fails
+          console.log("Sign-in failed");
           return null;
         } catch (error) {
-          console.error("Error connecting to database:", error);
+          console.error("Error during sign-in:", error);
           return null;
         }
       },
@@ -53,9 +55,9 @@ const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user }: any) {
       if (user) {
-        token.userId = user.userId; 
-        token.email = user.email; 
-        token.projects = user.projects
+        token.userId = user.userId;
+        token.email = user.email;
+        token.projects = user.projects || [];
       }
       return token;
     },
@@ -63,7 +65,7 @@ const authOptions: AuthOptions = {
       if (token) {
         session.userId = token.userId;
         session.user.email = token.email;
-        session.projects = token.projects
+        session.projects = token.projects || [];
       }
       return session;
     },

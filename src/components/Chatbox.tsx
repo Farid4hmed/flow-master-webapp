@@ -31,8 +31,8 @@ const Chatbox: any = (props: any) => {
     addPrompt(newPrompt);
     setSubmitted(true);
     setIsFetchingResponse(true);
-
-    const chatBotResp = await getChatBotResponse(query, currentProject?.user_id, currentProject?.id);
+    console.log("here", currentProject)
+    const chatBotResp = await getChatBotResponse(query, currentProject?.userId, currentProject?.id);
 
     updatePrompt(textId, { response: chatBotResp?.model_output })
 
@@ -44,7 +44,7 @@ const Chatbox: any = (props: any) => {
   const getMermaidCodeResponse = async () => {
     props.setIsLoading(true);
     console.log(currentProject)
-    let response = await getMermaidCode(currentProject?.user_id, currentProject?.id);
+    let response = await getMermaidCode(currentProject?.userId, currentProject?.id);
 
     let mermaidCode = response;
     mermaidCode = cleanMermaidInput(mermaidCode);
@@ -65,14 +65,14 @@ const Chatbox: any = (props: any) => {
         behavior: 'smooth'
       });
     }
-    setSubmitted(prompts.length > 0)
+    if(prompts)setSubmitted(prompts.length > 0)
 
   }, [prompts]);
 
   return (
     <div className="flex justify-center items-center h-full w-full rounded-xl shadow-xl m-0">
       <div className="flex flex-col items-start sm:px-10 px-4 text-left justify-start sm:pt-8 pt-4 2xl:px-10 h-full w-full bg-gray-200 relative no-scrollbar rounded-2xl rounded-tl-4xl">
-        {prompts.length > 0 && (
+        {prompts && prompts.length > 0 && (
           <div className="absolute top-3 md:top-4 left-9 text-gray-500">
             <button className="bg-none text-xs underline" onClick={clearChat}>
               Clear Chat
@@ -101,7 +101,7 @@ const Chatbox: any = (props: any) => {
         </div>
         <div className="w-full absolute bottom-0 left-0">
           <Form onSubmit={handleSubmit} disabled={isFetchingResponse} query={query} setQuery={setQuery} />
-          {!isFetchingResponse && prompts.length >= 1 &&
+          {!isFetchingResponse && prompts && prompts.length >= 1 &&
             (<div className="w-full flex justify-center items-center sm:mb-3 mb-2 mt-0">
               {!props.isLoading ? <Button
                 className="bg-green-500 hover:bg-green-700"
@@ -120,7 +120,7 @@ const Chatbox: any = (props: any) => {
           }
 
 
-          {!submitted && query.length == 0 && prompts.length == 0 && (
+          {!submitted && query.length == 0 && prompts && prompts.length == 0 && (
             <div className="w-full flex justify-center items-center pt-2">
               <div className="grid grid-cols-2 sm:mt-5 mt-1 md:-mt-4 sm:mb-5 mb-2 gap-4 w-3/4">
                 <button

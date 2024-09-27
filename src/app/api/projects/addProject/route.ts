@@ -1,9 +1,8 @@
-// app/api/addProject/route.ts
-import { sql } from "@vercel/postgres";
-
 export async function POST(request: Request) {
   try {
     const { userId, title, prompts, mermaid } = await request.json();
+    
+    // Validate required fields
     if (!userId || !title) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
@@ -16,20 +15,39 @@ export async function POST(request: Request) {
       );
     }
 
-    const response = await sql`
-      INSERT INTO sm_project (user_id, title, prompts, mermaid)
-      VALUES (${userId}, ${title}, ${JSON.stringify(prompts)}, ${mermaid})
-      RETURNING *;
-    `;
-
-    const newProject = response.rows[0]; 
-
-    return new Response(JSON.stringify({ project: newProject }), {
-      status: 201,
+    // Make a POST request to the external API to add the project
+    const apiResponse = await fetch('https://fab-team-services.xyz:8089/api/projects/addProject', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        userId,
+        title,
+        prompts,
+        mermaid,
+      }),
     });
+
+    const data = await apiResponse.json();
+
+    if (apiResponse.status === 200 || apiResponse.status === 201) {
+      // Return the project details from the external API
+      return new Response(JSON.stringify({ project: data.body }), {
+        status: apiResponse.status,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } else {
+      // Handle failed API response
+      return new Response(JSON.stringify({ error: "Failed to add project" }), {
+        status: apiResponse.status,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
   } catch (error) {
     console.error("Error adding project:", error);
     return new Response(JSON.stringify({ error: "Failed to add project" }), {

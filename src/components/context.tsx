@@ -15,7 +15,7 @@ interface Prompt {
 interface Project {
   id: string;
   title: string;
-  user_id: number;
+  userId: number;
   edit: boolean;
   prompts: Prompt[];
   mermaid: string;
@@ -29,7 +29,7 @@ interface CurrentProject {
   prompts: Prompt[];
   mermaid: string;
   elements: any;
-  user_id: number;
+  userId: number;
 }
 
 export const AppContext = React.createContext<{
@@ -187,7 +187,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       const newProjectTitle = await getProjectTitle(updatedPrompts, currentProject.id, myUUID);
 
-      handleSaveProjectTitle(currentProject.id, currentProject.user_id, newProjectTitle)
+      handleSaveProjectTitle(currentProject.id, currentProject.userId, newProjectTitle)
       // console.log("NEWPROJECTTITLE", newProjectTitle)
       // if (newProjectTitle) {
 
@@ -245,7 +245,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: project.user_id,
+          userId: project.userId,
           title: project.title,
           prompts: project.prompts,
           mermaid: project.mermaid,

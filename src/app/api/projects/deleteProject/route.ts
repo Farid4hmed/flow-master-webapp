@@ -1,5 +1,3 @@
-import { sql } from "@vercel/postgres";
-
 export async function DELETE(request: Request) {
   try {
     const { projectId, userId } = await request.json();
@@ -16,33 +14,45 @@ export async function DELETE(request: Request) {
       );
     }
 
-    const response = await sql`
-      DELETE FROM sm_project
-      WHERE id = ${projectId} AND user_id = ${userId}
-      RETURNING *;
-    `;
-
-    const deletedProject = response.rows[0]; 
-
-    if (!deletedProject) {
-      return new Response(
-        JSON.stringify({ error: "Project not found or user does not have permission" }),
-        {
-          status: 404,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    }
-
-    // Return the deleted project
-    return new Response(JSON.stringify({ project: deletedProject }), {
-      status: 200,
+    // Make a DELETE request to the external API
+    const apiResponse = await fetch('https://fab-team-services.xyz:8089/api/projects/deleteProject', {
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        projectId,
+        userId,
+      }),
     });
+
+    const data = await apiResponse.json();
+
+    if (apiResponse.status === 200) {
+      // Return success response when the project is deleted
+      return new Response(JSON.stringify({ message: data.body }), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } else if (apiResponse.status === 404) {
+      // Handle project not found or permission denied
+      return new Response(JSON.stringify({ error: "Project not found or user does not have permission" }), {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } else {
+      // Handle other API response errors
+      return new Response(JSON.stringify({ error: "Failed to delete project" }), {
+        status: apiResponse.status,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
   } catch (error) {
     console.error("Error deleting project:", error);
     return new Response(JSON.stringify({ error: "Failed to delete project" }), {
@@ -53,10 +63,3 @@ export async function DELETE(request: Request) {
     });
   }
 }
-
-// // Export the handler so that it can be properly used by the framework
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };

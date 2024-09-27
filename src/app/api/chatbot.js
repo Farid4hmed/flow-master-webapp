@@ -27,15 +27,15 @@ export async function getChatBotResponse(query, userId, projectId) {
     // const conversationHistory = prompts.map(entry => `User: ${entry.user}\nBot: ${entry.bot}`).join('\n');
     // const prompt = `Respond to users latest message, keep the response short, Send response in HTML (don't add html at the front of the text): ${conversationHistory}\nUser: ${query}\nBot:`;
     // const myUUID = uuidv4();
-
+    console.log("HEREBRO", userId)
     const payload = {
-        userID: `${userId}`,
+        userID: userId,
         requestID: `${projectId}`,
         user_input: query
     }
 
 
-    const botResponse = await axios.post(`http://18.139.111.227/chat-llm`, payload, {
+    const botResponse = await axios.post(`https://fab-team-services.xyz/chat-llm`, payload, {
         headers: {
             'Content-Type': 'application/json'
         }
@@ -54,7 +54,7 @@ export async function getMermaidCode(userId, projectId) {
     }
 
     try {
-        const botResponse = await axios.post(`http://18.139.111.227/generate-mermaid`, payload, {
+        const botResponse = await axios.post(`https://fab-team-services.xyz/generate-mermaid`, payload, {
             headers: {
                 'Content-Type': 'application/json'
             }

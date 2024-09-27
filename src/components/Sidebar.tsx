@@ -92,7 +92,7 @@ export function SidebarWrapper({ children, ...props }: any) {
     const userId = session.userId;
     const title = "Project " + (projects.length + 1);
 
-    const newProject = { title: title, user_id: userId, edit: false, id: '', mermaid: '', prompts: [], elements: [] };
+    const newProject = { title: title, userId: userId, edit: false, id: '', mermaid: '', prompts: [], elements: [] };
     addProject(newProject);
 
     setAddingProj(false);
@@ -100,8 +100,8 @@ export function SidebarWrapper({ children, ...props }: any) {
 
   useEffect(() => {
     if (session) {
+      console.log("SESSION", session)
       fetchProjectsByUserId(session.userId)
-      console.log("CALLED")
     }
   }, [])
 
