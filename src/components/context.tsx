@@ -238,6 +238,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
 
   const addProject = async (project: Project) => {
+    // Generate a temporary id for the project (could be a UUID or a simple placeholder)
+    const tempId = `temp-${Date.now()}`;
+    const tempProject = { ...project, id: tempId };
+  
+    // Add the project with a temporary id to the state
+    setProjects((prevProjects) => [tempProject, ...prevProjects]);
+  
     try {
       const response = await fetch('/api/projects/addProject', {
         method: 'POST',
@@ -251,12 +258,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           mermaid: project.mermaid,
         }),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-        const newProject: any = data.project;
-        changeCurrentProject(newProject);
-        setProjects((prevProjects) => [newProject, ...prevProjects]);
+        console.log("DATA", data)
+        const newProjectId: any = data.project.project_id;
+  
+        // Replace the temporary id with the new project_id from the API response
+        const updatedProject = { ...project, id: `${newProjectId}` };
+  
+        // Update the project in the state with the correct id
+        setProjects((prevProjects) =>
+          prevProjects.map((proj) =>
+            proj.id === tempId ? updatedProject : proj
+          )
+        );
+  
+        changeCurrentProject(updatedProject);
+        console.log("DONE")
       } else {
         console.error('Failed to add project:', response.statusText);
       }
