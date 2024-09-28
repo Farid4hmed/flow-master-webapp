@@ -100,7 +100,6 @@ export function SidebarWrapper({ children, ...props }: any) {
 
   useEffect(() => {
     if (session) {
-      console.log("SESSION", session)
       fetchProjectsByUserId(session.userId)
     }
   }, [])

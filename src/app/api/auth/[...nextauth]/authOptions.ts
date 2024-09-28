@@ -30,7 +30,6 @@ const authOptions: AuthOptions = {
           });
           
           const data = await apiResponse.json();
-          console.log("API RESPONSE", data)
           if (apiResponse.status === 200) {
             // Return an object that conforms to the extended User type
             const user: any = {

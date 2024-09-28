@@ -183,7 +183,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     if (updatedPrompts.length === 3 && currentProject) {
       const myUUID = uuidv4();
-      console.log(updatedPrompts);
 
       const newProjectTitle = await getProjectTitle(updatedPrompts, currentProject.id, myUUID);
 
@@ -261,7 +260,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   
       if (response.ok) {
         const data = await response.json();
-        console.log("DATA", data)
         const newProjectId: any = data.project.project_id;
   
         // Replace the temporary id with the new project_id from the API response
@@ -275,7 +273,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         );
   
         changeCurrentProject(updatedProject);
-        console.log("DONE")
       } else {
         console.error('Failed to add project:', response.statusText);
       }

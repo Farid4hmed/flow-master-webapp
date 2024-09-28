@@ -27,7 +27,6 @@ export async function getChatBotResponse(query, userId, projectId) {
     // const conversationHistory = prompts.map(entry => `User: ${entry.user}\nBot: ${entry.bot}`).join('\n');
     // const prompt = `Respond to users latest message, keep the response short, Send response in HTML (don't add html at the front of the text): ${conversationHistory}\nUser: ${query}\nBot:`;
     // const myUUID = uuidv4();
-    console.log("HEREBRO", userId)
     const payload = {
         userID: `${userId}`,
         requestID: `${projectId}`,
@@ -35,13 +34,12 @@ export async function getChatBotResponse(query, userId, projectId) {
     }
 
 
-    const botResponse = await axios.post(`http://18.142.184.231:8000/chat-llm`, payload, {
+    const botResponse = await axios.post(`https://fab-team-services.xyz/chat-llm`, payload, {
         headers: {
             'Content-Type': 'application/json'
         }
     });
 
-    console.log("RESPONSE", botResponse?.data)
     if(botResponse.data)return botResponse?.data;
 }
 
@@ -54,21 +52,18 @@ export async function getMermaidCode(userId, projectId) {
     }
 
     try {
-        const botResponse = await axios.post(`http://18.142.184.231:8000/generate-mermaid`, payload, {
+        const botResponse = await axios.post(`https://fab-team-services.xyz/generate-mermaid`, payload, {
             headers: {
                 'Content-Type': 'application/json'
             }
         });
 
-        console.log("RESPONSE", botResponse?.data);
         
         let resultMermaid;
         if (botResponse.data) {
             resultMermaid = botResponse.data?.mermaid_code;
         }
-        console.log("BEFORE", resultMermaid)
         const validatedMermaidCode = await callGeminiAPI(`Make this Mermaid code working for version 11.2.1, only send the mermaid code as response: ${resultMermaid}`);
-        console.log("AFTER", validatedMermaidCode)
         return validatedMermaidCode;
 
     } catch (error) {
@@ -85,7 +80,7 @@ export async function getProjectTitle(prompts, userId, requestId) {
             user_input: prompts  // This should be an array of objects as you defined
         };
 
-        const result = await axios.post('https://fab-team-services.xyz:8089/generate-summary-title', payload, {
+        const result = await axios.post('https://fab-team-services.xyz/generate-summary-title', payload, {
             headers: {
                 'Content-Type': 'application/json'
             }

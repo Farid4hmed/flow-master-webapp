@@ -5,8 +5,6 @@ export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
 
-    console.log("email", email);
-    console.log("password", password);
 
     // Make an API call to the Postman API for registration
     const apiResponse = await fetch('https://fab-team-services.xyz:8089/register', {
