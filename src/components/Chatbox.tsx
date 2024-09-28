@@ -7,7 +7,7 @@ import { CircleArrowRight } from 'lucide-react';
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { AppContext } from "./context";
 import { Button } from "@/components/ui/button"
-
+import ReactMarkdown from 'react-markdown';
 
 
 const Chatbox: any = (props: any) => {
@@ -89,9 +89,8 @@ const Chatbox: any = (props: any) => {
                   </div>
                   {prompt.response && (
                     <div className="bg-gray-100 p-4 text-sm rounded-lg rounded-tl-none shadow-md self-start text-left break-words mr-auto max-w-[70%]">
-                      <strong className="text-purple-600">Bot:</strong> <div
-                        dangerouslySetInnerHTML={{ __html: prompt.response }}
-                      />
+                      <strong className="text-purple-600">Bot:</strong> 
+                      <ReactMarkdown>{prompt.response}</ReactMarkdown>
                     </div>
                   )}
                 </div>
