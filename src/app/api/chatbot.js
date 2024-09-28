@@ -41,6 +41,7 @@ export async function getChatBotResponse(query, userId, projectId) {
     });
 
     if(botResponse.data)return botResponse?.data;
+    else return null
 }
 
 
@@ -59,12 +60,12 @@ export async function getMermaidCode(userId, projectId) {
         });
 
         
-        let resultMermaid;
-        if (botResponse.data) {
-            resultMermaid = botResponse.data?.mermaid_code;
-        }
-        const validatedMermaidCode = await callGeminiAPI(`Make this Mermaid code working for version 11.2.1, only send the mermaid code as response: ${resultMermaid}`);
-        return validatedMermaidCode;
+        // let resultMermaid;
+        // if (botResponse.data) {
+        //     resultMermaid = botResponse.data?.mermaid_code;
+        // }
+        // const validatedMermaidCode = await callGeminiAPI(`Make this Mermaid code working for version 11.2.1, only send the mermaid code as response: ${resultMermaid}`);
+        return botResponse.data?.mermaid_code;
 
     } catch (error) {
         console.error("Error fetching mermaid code:", error);

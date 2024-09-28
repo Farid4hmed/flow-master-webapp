@@ -13,7 +13,6 @@ import remarkGfm from 'remark-gfm';
 const Chatbox: any = (props: any) => {
   const { prompts, addPrompt, updatePrompt, clearChat, currentProject, projects } = useContext(AppContext);
 
-
   const [submitted, setSubmitted] = useState(false);
   const [isFetchingResponse, setIsFetchingResponse] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -79,7 +78,7 @@ const Chatbox: any = (props: any) => {
         <div ref={chatContainerRef} className="w-full pt-4 no-scrollbar" style={{ maxHeight: 'calc(70%)', transition: 'all 0.5s ease', overflowY: submitted ? "scroll" : "hidden", scrollbarWidth: "none" }}>
           {submitted && (
             <section className="flex flex-col space-y-4">
-              {prompts.map((prompt) => (
+              {prompts && Array.isArray(prompts) && prompts.map((prompt) => (
                 <div key={prompt.id} className="flex flex-col space-y-5 pb-14 sm:pb-6">
                   <div className="bg-gray-100 p-4 text-sm rounded-lg rounded-tr-none shadow-md self-end text-left break-words ml-auto max-w-[90%]">
                     <strong className="text-green-500">You:</strong> {prompt.text}

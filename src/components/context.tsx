@@ -366,9 +366,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const changeCurrentProject = async (project: CurrentProject) => {
     if (project && (!project.elements || project.elements.length === 0)) {
       let ele = await convertMermaidToElements(project.mermaid) || [];
-
+      // let promptsArr = JSON.parse(project
       setCurrentProject({
         ...project,
+        // prompts: JSON.parse(project.prompts)
         elements: ele
       });
     }

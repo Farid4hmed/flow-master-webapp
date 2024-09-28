@@ -25,6 +25,9 @@ export async function POST(request: Request) {
     const data = await apiResponse.json();
 
     if (apiResponse.status === 200) {
+      data.body.projects.forEach((project: any) => {
+        project.prompts = JSON.parse(project.prompts);
+      });
       // Return the projects from the API response
       return new Response(JSON.stringify({ projects: data.body.projects }), {
         status: 200,
