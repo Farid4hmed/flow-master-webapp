@@ -59,7 +59,7 @@ To get started with **Solutions Mapper**, follow these simple steps:
 - **Next.js**: For server-side rendering and static site generation.
 - **React**: A JavaScript library for building user interfaces.
 - **Excalidraw**: An open-source virtual whiteboard for sketching hand-drawn like diagrams.
-- **OpenAI API**: To power the AI-driven solution generator.
+- **Gemini API**: To power the AI-driven solution generator.
 
 ## 🙌 Contributing
 
