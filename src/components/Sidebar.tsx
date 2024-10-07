@@ -11,6 +11,8 @@ import {
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const AppWrapper = dynamic(() => import('@/components/excalidraw/appWrapper'), {
   ssr: false, // Disable server-side rendering for this component
@@ -185,7 +187,12 @@ export function SidebarWrapper({ children, ...props }: any) {
                             className={`mb-2 p-2  rounded-md flex text-sm items-center justify-between hover:bg-gray-200 ${project.id === currentProject?.id ? "bg-gray-200" : "bg-gray-100"}`}
                             onClick={() => changeCurrentProject(project)}
                           >
-                            {project.title}
+                            <ReactMarkdown
+                              remarkPlugins={[remarkGfm]}
+                            >
+                              {project.title}
+                            </ReactMarkdown>
+
                             <div>
                               <button
                                 className="ml-2 px-1 py-1 text-sm text-blue-500 hover:text-blue-700"
@@ -273,7 +280,7 @@ export const Logo = () => {
         animate={{ opacity: 1 }}
         className="font-medium text-black dark:text-white whitespace-pre"
       >
-        Solutions Mapper
+        Flow Master
       </motion.span>
     </Link>
   );

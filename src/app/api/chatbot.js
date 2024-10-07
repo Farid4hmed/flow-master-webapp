@@ -34,7 +34,7 @@ export async function getChatBotResponse(query, userId, projectId) {
     }
 
 
-    const botResponse = await axios.post(`https://fab-team-services.xyz/chat-llm`, payload, {
+    const botResponse = await axios.post(`https://fab-team-services.xyz/chat-llm/`, payload, {
         headers: {
             'Content-Type': 'application/json'
         }
@@ -53,7 +53,7 @@ export async function getMermaidCode(userId, projectId) {
     }
 
     try {
-        const botResponse = await axios.post(`https://fab-team-services.xyz/generate-mermaid`, payload, {
+        const botResponse = await axios.post(`https://fab-team-services.xyz/generate-mermaid/`, payload, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -81,7 +81,7 @@ export async function getProjectTitle(prompts, userId, requestId) {
             user_input: prompts  // This should be an array of objects as you defined
         };
 
-        const result = await axios.post('https://fab-team-services.xyz/generate-summary-title', payload, {
+        const result = await axios.post('https://fab-team-services.xyz/generate-summary-title/', payload, {
             headers: {
                 'Content-Type': 'application/json'
             }

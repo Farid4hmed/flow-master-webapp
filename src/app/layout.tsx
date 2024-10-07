@@ -8,7 +8,7 @@ import { AppProvider } from "@/components/context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Solutions Mapper",
+  title: "Flow Master",
   description: "Converts Text to Diagram",
   icons: {
     icon: "/favicon.ico",
