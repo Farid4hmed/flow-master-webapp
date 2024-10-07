@@ -1,5 +1,5 @@
 ## Welcome To Solutions Mapper 🌍
-– an interactive tool designed to help you generate and visualize creative solutions effortlessly! With a built-in **Chatbot** for generating solutions and an integrated **Excalidraw Editor** for modifying them yourself, Solutions Mapper is your ultimate companion for brainstorming and problem-solving.
+– An interactive tool designed to help you generate and visualize creative solutions effortlessly! With a built-in **Chatbot** for generating solutions and an integrated **Excalidraw Editor** for modifying them yourself, Solutions Mapper is your ultimate companion for brainstorming and problem-solving.
 
 Live Link - https://solutions-mapper.vercel.app/
 ![Screenshot 2024-08-30 at 6 14 21 PM](https://github.com/user-attachments/assets/8afffdb3-0097-47f1-9ef6-4ae4b8be4d4b)
