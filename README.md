@@ -26,8 +26,8 @@ To get started with **Flow Master**, follow these simple steps:
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/Farid4hmed/solutions-mapper.git
-    cd solutions-mapper
+    git clone https://github.com/Farid4hmed/flow-master-webapp.git
+    cd flow-master-webapp
     ```
 
 2. **Install dependencies:**
