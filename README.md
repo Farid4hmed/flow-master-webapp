@@ -1,7 +1,7 @@
-## Welcome To Solutions Mapper 🌍
-– An interactive tool designed to help you generate and visualize creative solutions effortlessly! With a built-in **Chatbot** for generating solutions and an integrated **Excalidraw Editor** for modifying them yourself, Solutions Mapper is your ultimate companion for brainstorming and problem-solving.
+## Welcome To Flow Master 🌍
+– An interactive tool designed to help you generate and visualize creative solutions effortlessly! With a built-in **Chatbot** for generating solutions and an integrated **Excalidraw Editor** for modifying them yourself, Flow Master is your ultimate companion for brainstorming and problem-solving.
 
-Live Link - https://solutions-mapper.vercel.app/
+Link To WebApp - https://flow-master-sepia.vercel.app/
 ![Screenshot 2024-08-30 at 6 14 21 PM](https://github.com/user-attachments/assets/8afffdb3-0097-47f1-9ef6-4ae4b8be4d4b)
 
 
@@ -21,7 +21,7 @@ Live Link - https://solutions-mapper.vercel.app/
 
 ## 🛠️ Installation
 
-To get started with **Solutions Mapper**, follow these simple steps:
+To get started with **Flow Master**, follow these simple steps:
 
 1. **Clone the repository:**
 
@@ -59,8 +59,10 @@ To get started with **Solutions Mapper**, follow these simple steps:
 - **Next.js**: For server-side rendering and static site generation.
 - **React**: A JavaScript library for building user interfaces.
 - **Excalidraw**: An open-source virtual whiteboard for sketching hand-drawn like diagrams.
-- **Gemini API**: To power the AI-driven solution generator.
-
+- **FastAPI**: To power the AI-driven solution generator.
+- **Bedrock**: Amazon’s machine learning service that provides foundational models for creating custom AI solutions.
+- **Claude**: An AI assistant by Anthropic used for generating natural language responses in the chatbot, assisting users in creating solutions.
+- 
 ## 🙌 Contributing
 
 Contributions are welcome! If you have suggestions for improvements or new features, please feel free to create a pull request or open an issue.
